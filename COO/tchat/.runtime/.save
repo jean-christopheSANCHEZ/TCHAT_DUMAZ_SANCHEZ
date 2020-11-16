@@ -1,3 +1,5 @@
-#Tue Nov 10 15:18:34 CET 2020
+#Mon Nov 16 16:28:38 CET 2020
+org.modelio.app.diagram.editor.OpenedDiagrams3='Diagramme de classe tchat' {40d94889-d159-48e2-a315-17806b55ac65} Standard.ClassDiagram
+org.modelio.app.diagram.editor.OpenedDiagrams2='Diagramme de s\u00E9quence Interaction1' {94deef1b-25d7-4b0e-b5f2-ac2d4b3ddea6} Standard.SequenceDiagram
 org.modelio.app.diagram.editor.OpenedDiagrams1='Diagramme de s\u00E9quence Interaction' {05ca0b49-2c68-455b-8bf6-2d7784a63844} Standard.SequenceDiagram
 org.modelio.app.diagram.editor.OpenedDiagrams0='Diagramme de cas d'utilisation tchat' {f61e13e2-d233-4bd6-9aa5-c5c487ed4e62} Standard.UseCaseDiagram

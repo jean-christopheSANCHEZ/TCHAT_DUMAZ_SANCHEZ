@@ -15,6 +15,7 @@
     <DEPENDENCIES>
       <COMP relation="OwnedBehavior">
         <COMPID name="Interaction" mc="Standard.Interaction" uid="da90fdfa-e9e7-4154-aff2-896cc9bff019"/>
+        <COMPID name="Interaction1" mc="Standard.Interaction" uid="9fca21bd-71d8-43b8-a46e-db7ebf205a08"/>
       </COMP>
       <COMP relation="OwnedElement">
         <COMPID name="utilisateur" mc="Standard.Actor" uid="3d25f94b-0e9e-4f2b-95a5-a55b410286b6"/>
@@ -31,9 +32,14 @@
         <COMPID name="Log in" mc="Standard.UseCase" uid="a022a62f-27fa-45f0-8c59-1ea175cdd705"/>
         <COMPID name="Log out" mc="Standard.UseCase" uid="86b340f4-53e4-45c0-8e3b-257010c5dc03"/>
         <COMPID name="Install application" mc="Standard.UseCase" uid="fa1ce54e-5a99-459c-a6b0-23d65e2813e7"/>
+        <COMPID name="User" mc="Standard.Class" uid="54a5a225-3d6f-4b0e-85f4-e970a08d8ab5"/>
+        <COMPID name="Agent" mc="Standard.Class" uid="fe5b2ebb-9f21-4e82-9005-abb84a09dc91"/>
+        <COMPID name="Gestionnaire login" mc="Standard.Class" uid="886b8db4-7fae-42b8-8792-80fb40d02002"/>
+        <COMPID name="Base de données" mc="Standard.Class" uid="71d4e0c9-bab3-4dc1-9cdd-20e6c4839cff"/>
       </COMP>
       <COMP relation="Product">
         <COMPID name="Diagramme de cas d'utilisation tchat" mc="Standard.UseCaseDiagram" uid="f61e13e2-d233-4bd6-9aa5-c5c487ed4e62"/>
+        <COMPID name="Diagramme de classe tchat" mc="Standard.ClassDiagram" uid="40d94889-d159-48e2-a315-17806b55ac65"/>
       </COMP>
     </DEPENDENCIES>
   </OBJECT>
