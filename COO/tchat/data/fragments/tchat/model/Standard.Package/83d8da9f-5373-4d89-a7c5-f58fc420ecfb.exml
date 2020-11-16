@@ -1,0 +1,40 @@
+<?xml version="1.0" ?>
+<!--GENERATED FILE, PLEASE DO NOT EDIT!!!--><EXT object="tchat" version="4">
+  <OBJECT>
+    <ID name="tchat" mc="Standard.Package" uid="83d8da9f-5373-4d89-a7c5-f58fc420ecfb"/>
+    <PID name="tchat" mc="Standard.Project" uid="a1816331-31dd-4a19-a098-79872c0fd117"/>
+    <ATTRIBUTES>
+      <ATT name="IsInstantiable">false</ATT>
+      <ATT name="IsAbstract">false</ATT>
+      <ATT name="IsLeaf">false</ATT>
+      <ATT name="IsRoot">false</ATT>
+      <ATT name="Visibility">Public</ATT>
+      <ATT name="Name"><![CDATA[tchat]]></ATT>
+      <ATT name="status">1970354901745664</ATT>
+    </ATTRIBUTES>
+    <DEPENDENCIES>
+      <COMP relation="OwnedBehavior">
+        <COMPID name="Interaction" mc="Standard.Interaction" uid="da90fdfa-e9e7-4154-aff2-896cc9bff019"/>
+      </COMP>
+      <COMP relation="OwnedElement">
+        <COMPID name="utilisateur" mc="Standard.Actor" uid="3d25f94b-0e9e-4f2b-95a5-a55b410286b6"/>
+        <COMPID name="Choix du pseudonyme" mc="Standard.UseCase" uid="7757c71b-1579-443f-9db2-a0055431882a"/>
+        <COMPID name="Démarrer une cession de clavardage" mc="Standard.UseCase" uid="864f415e-b740-4011-a4da-00f68f142be5"/>
+        <COMPID name="Envoie du message" mc="Standard.UseCase" uid="44dd871b-b659-45ff-8b3a-30078c0d3ef5"/>
+        <COMPID name="Expert/Admin" mc="Standard.Actor" uid="34de6dcd-fe21-4b0b-b53e-26586a3e9def"/>
+        <COMPID name="liste des utilisateurs connectés" mc="Standard.UseCase" uid="5aadd6e1-4b1d-41fa-8f22-66fccfc88e11"/>
+        <COMPID name="Fermer une cession de clavardage" mc="Standard.UseCase" uid="88bbac46-3bb0-44d4-b9b6-11b1f277f7c1"/>
+        <COMPID name="Afficher historique message" mc="Standard.UseCase" uid="535e9241-b4f3-41e5-90c5-7cfac983cfd5"/>
+        <COMPID name="Stocker message + timestamp" mc="Standard.UseCase" uid="f58c874f-16c6-4de8-925e-5a70f7e4006b"/>
+        <COMPID name="Installer les modules" mc="Standard.UseCase" uid="b4c7d5da-4e59-4822-b750-41a06da2559c"/>
+        <COMPID name="Uninstall application" mc="Standard.UseCase" uid="8b1f8c2d-d83d-4e57-8b91-d7d7c102f1c8"/>
+        <COMPID name="Log in" mc="Standard.UseCase" uid="a022a62f-27fa-45f0-8c59-1ea175cdd705"/>
+        <COMPID name="Log out" mc="Standard.UseCase" uid="86b340f4-53e4-45c0-8e3b-257010c5dc03"/>
+        <COMPID name="Install application" mc="Standard.UseCase" uid="fa1ce54e-5a99-459c-a6b0-23d65e2813e7"/>
+      </COMP>
+      <COMP relation="Product">
+        <COMPID name="Diagramme de cas d'utilisation tchat" mc="Standard.UseCaseDiagram" uid="f61e13e2-d233-4bd6-9aa5-c5c487ed4e62"/>
+      </COMP>
+    </DEPENDENCIES>
+  </OBJECT>
+</EXT>
