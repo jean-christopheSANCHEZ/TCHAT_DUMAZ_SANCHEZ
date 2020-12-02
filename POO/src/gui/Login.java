@@ -49,9 +49,7 @@ public class Login extends JFrame implements ActionListener {
       setSize(1920,1080);
       setVisible(true);
    }
-   public static void main(String[] args) {
-      new Login();
-   }
+   
    @Override
    public void actionPerformed(ActionEvent ae) {
       String userName = userName_text.getText();
@@ -64,7 +62,7 @@ public class Login extends JFrame implements ActionListener {
 		e.printStackTrace();
 	}
       message.setText(" Hello " + userName + " you choose port : " + portNumber);
-      
+      this.setVisible(false);
       
    }
    public User getNewUser() {

@@ -1,13 +1,16 @@
 package gui;
 
 import clientLogin.User;
+
+import java.awt.event.ActionListener;
+
 import javax.swing.*;
 
 
-public class Main {
+public class Main{
 	public static void main(String[] args){
 		SwingUtilities.invokeLater(new Runnable(){
-			public void run(){
+			public void run() {
 				//On crée une nouvelle instance de notre JDialog
 				JDialog dialog = new JDialog();
 				dialog.setSize(1920, 1080);//On lui donne une taille
@@ -17,16 +20,19 @@ public class Main {
 				
 				Login pageLogin = new Login();
 				
+				
 				dialog.setVisible(true);//On la rend visible
 				User utilisateur = pageLogin.getNewUser();
-				JTextField loginUtilisateur;
-				loginUtilisateur = new JTextField();
-				loginUtilisateur.setText(utilisateur.getLogin());
+				JLabel loginUtilisateur;
 				JPanel panelPrincipal = new JPanel();
+				loginUtilisateur = new JLabel(utilisateur.getLogin());				
 				panelPrincipal.add(loginUtilisateur);
-				
+				panelPrincipal.setVisible(true);
 			}
 		});
 	}
+	
+	
+	
 }
 
