@@ -33,6 +33,11 @@ public class Conversation {
 	public void setUser2(User user2) {
 		this.user2 = user2;
 	}
+
+	@Override
+	public String toString() {
+		return "Conversation of " + user1.getLogin() + " to " + user2.getLogin() + ", id=" + id + "";
+	}
 	
 	
 }

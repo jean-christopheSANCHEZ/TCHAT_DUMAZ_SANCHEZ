@@ -39,6 +39,14 @@ public class NewConversationForm extends JFrame implements ActionListener{
 	       //Add the buttons.
 	       JButton newConvButton = new JButton("Create new conversation");
 	       
+	       JButton back = new JButton("Back to Main Frame");
+		    back.addActionListener(new ActionListener() {
+		    	public void actionPerformed(ActionEvent ae) {
+					//save a conversation dans la bdd et ouvre la page de conversation
+		    		new MainFrame(user);
+		    		frame.dispose();
+				}
+			});
 	       
 	       userDest_label = new JLabel();
 	       userDest_label.setText("Destinataire :");
@@ -52,7 +60,7 @@ public class NewConversationForm extends JFrame implements ActionListener{
 	       id_label.setText("Unique Id conv :");
 	       id_text = new JTextField();
 	       
-	       panel = new JPanel(new GridLayout(4, 1));
+	       panel = new JPanel(new GridLayout(5, 1));
 	       
 	       panel.add(userDest_label);
 	       panel.add(userDest_text);
@@ -61,6 +69,7 @@ public class NewConversationForm extends JFrame implements ActionListener{
 	       panel.add(id_label);
 	       panel.add(id_text);
 	       panel.add(newConvButton);
+	       panel.add(back);
 	       add(panel, BorderLayout.CENTER);
 	       
 	       
@@ -73,6 +82,7 @@ public class NewConversationForm extends JFrame implements ActionListener{
 					try {
 						User destinataire = new User(userDest_text.getText(), 1, InetAddress.getLocalHost(), Integer.parseInt(portDest_text.getText()));
 						Conversation newConv = new Conversation(user, destinataire, Integer.parseInt(id_text.getText()));
+						new MainFrame(user);
 						frame.dispose();
 					} catch (NumberFormatException e) {
 						// TODO Auto-generated catch block
@@ -87,7 +97,7 @@ public class NewConversationForm extends JFrame implements ActionListener{
 	       
 		   frame.pack();
 		   frame.setSize(300, 600);
-		   frame.setTitle("LogIn");
+		   frame.setTitle("Create new converstion");
 	       frame.setVisible(true);
 	}
 	
