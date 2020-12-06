@@ -43,7 +43,7 @@ public class NewConversationForm extends JFrame implements ActionListener{
 		    back.addActionListener(new ActionListener() {
 		    	public void actionPerformed(ActionEvent ae) {
 					//save a conversation dans la bdd et ouvre la page de conversation
-		    		new MainFrame(user);
+		    		//new MainFrame(user);
 		    		frame.dispose();
 				}
 			});

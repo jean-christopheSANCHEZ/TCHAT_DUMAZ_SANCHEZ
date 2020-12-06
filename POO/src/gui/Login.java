@@ -1,7 +1,7 @@
 package gui;
 
 
-
+import java.sql.*;
 import clientLogin.*;
 
 import java.awt.*;
@@ -59,14 +59,27 @@ public class Login extends JFrame implements ActionListener {
        
        logButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
+				
 				String userName = userName_text.getText();
 			    int portNumber= Integer.parseInt(userPort.getText()); 
 			    User newUtilisateur;
 				try {
 					newUtilisateur = new User(userName, 1, InetAddress.getLocalHost(), portNumber);
+					
+					Class.forName("sun.jdbc.odbc.JdbcOdbcDriver");
+					Class.forName("mysql-connector-java-8.0.22.jar");
+					
+					String DBurl = "jdbc:odbc:test";
+					Connection con = DriverManager.getConnection(DBurl, "admin", "");
+					ResultSet résultats = null;
+					String requete = "SELECT * FROM login";
+					Statement stmt = con.createStatement();
+					résultats = stmt.executeQuery(requete);
+					System.out.println(résultats);
+					
 					frame.dispose();
 					new MainFrame(newUtilisateur);
-				} catch (UnknownHostException e) {
+				} catch (UnknownHostException | ClassNotFoundException | SQLException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}

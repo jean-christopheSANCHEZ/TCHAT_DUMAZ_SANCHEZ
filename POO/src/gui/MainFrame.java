@@ -66,7 +66,7 @@ public class MainFrame {
 	    	public void actionPerformed(ActionEvent ae) {
 				//save a conversation dans la bdd et ouvre la page de conversation
 	    		new NewConversationForm(user);
-	    		frame.dispose();
+	    		//frame.dispose();
 			}
 		});
 	    
@@ -107,7 +107,7 @@ public class MainFrame {
             @Override
             public void valueChanged(ListSelectionEvent evt) {
                 new ConversationPage(user);
-                frame.dispose();
+                //frame.dispose();
             }
         });
 	    
