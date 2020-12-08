@@ -44,17 +44,22 @@ public class Login extends JFrame implements ActionListener {
        port_label.setText("Port number :");
        userPort = new JTextField();
        
-       panel = new JPanel(new GridLayout(3, 1));
+       JLabel errorConnectionMessage = new JLabel();
+       errorConnectionMessage.setText("");
+       
+       
+       panel = new JPanel(new GridLayout(3, 2));
        
        panel.add(user_label);
        panel.add(userName_text);
        panel.add(port_label);
        panel.add(userPort);
        panel.add(logButton);
-       add(panel, BorderLayout.CENTER);
+       panel.add(errorConnectionMessage);
        
        
-       contentPane.add(panel);
+       
+       
        
        
        logButton.addActionListener(new ActionListener() {
@@ -64,21 +69,53 @@ public class Login extends JFrame implements ActionListener {
 			    int portNumber= Integer.parseInt(userPort.getText()); 
 			    User newUtilisateur;
 				try {
-					newUtilisateur = new User(userName, 1, InetAddress.getLocalHost(), portNumber);
 					
-					Class.forName("sun.jdbc.odbc.JdbcOdbcDriver");
-					Class.forName("mysql-connector-java-8.0.22.jar");
 					
-					String DBurl = "jdbc:odbc:test";
-					Connection con = DriverManager.getConnection(DBurl, "admin", "");
-					ResultSet résultats = null;
-					String requete = "SELECT * FROM login";
+					//Class.forName("sun.jdbc.odbc.JdbcOdbcDriver");
+					Class.forName("com.mysql.cj.jdbc.Driver");
+					
+					String DBurl = "jdbc:mysql://localhost/test?zeroDateTimeBehavior=CONVERT_TO_NULL&serverTimezone=UTC";
+					Connection con = DriverManager.getConnection(DBurl, "root", "");
+					ResultSet result = null;
+					String requete = "SELECT identifiant,port FROM login WHERE identifiant='"+userName+"' AND port='"+portNumber+"'";
 					Statement stmt = con.createStatement();
-					résultats = stmt.executeQuery(requete);
-					System.out.println(résultats);
+					result = stmt.executeQuery(requete);
 					
-					frame.dispose();
-					new MainFrame(newUtilisateur);
+					String bddResultLogin = null,bddResultPort = null;
+					
+					ResultSetMetaData rsmd = result.getMetaData();
+					int columnsNumber = rsmd.getColumnCount();
+					   while (result.next()) {
+					       for (int i = 1; i <= columnsNumber; i++) {
+					           if (i == 1) {
+					        	   bddResultLogin = result.getString(i);
+					        	   }
+					           if (i == 2) {
+					        	   bddResultPort = result.getString(i);
+					        	   }
+					       }
+					   }
+					   
+					   System.out.println(bddResultLogin + " port : "+bddResultPort);   
+					if(userName.equals(bddResultLogin) && portNumber == Integer.parseInt(bddResultPort)) {
+						
+						
+						newUtilisateur = new User(userName, 1, InetAddress.getLocalHost(), portNumber);
+						frame.dispose();
+						new MainFrame(newUtilisateur);
+					}else {
+						System.out.println("Login issue : login or port number invalid");
+						
+						errorConnectionMessage.setText("Login issue: "+userName+" and "+portNumber+ " are invalid");
+						errorConnectionMessage.setForeground(Color.RED);
+						frame.repaint();
+					}
+					con.close();
+					stmt.close();				
+					
+					
+					
+					
 				} catch (UnknownHostException | ClassNotFoundException | SQLException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -88,8 +125,9 @@ public class Login extends JFrame implements ActionListener {
 			}
 		});
        
+       contentPane.add(panel);
 	   frame.pack();
-	   frame.setSize(300, 600);
+	   frame.setSize(400, 300);
 	   frame.setTitle("LogIn");
        frame.setVisible(true);
 	   
