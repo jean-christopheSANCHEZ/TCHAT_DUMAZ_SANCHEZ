@@ -74,10 +74,10 @@ public class Login extends JFrame implements ActionListener {
 					//Class.forName("sun.jdbc.odbc.JdbcOdbcDriver");
 					Class.forName("com.mysql.cj.jdbc.Driver");
 					
-					String DBurl = "jdbc:mysql://localhost/test?zeroDateTimeBehavior=CONVERT_TO_NULL&serverTimezone=UTC";
+					String DBurl = "jdbc:mysql://localhost/login?zeroDateTimeBehavior=CONVERT_TO_NULL&serverTimezone=UTC";
 					Connection con = DriverManager.getConnection(DBurl, "root", "");
 					ResultSet result = null;
-					String requete = "SELECT identifiant,port FROM login WHERE identifiant='"+userName+"' AND port='"+portNumber+"'";
+					String requete = "SELECT identifiant,port FROM user WHERE identifiant='"+userName+"' AND port='"+portNumber+"'";
 					Statement stmt = con.createStatement();
 					result = stmt.executeQuery(requete);
 					
