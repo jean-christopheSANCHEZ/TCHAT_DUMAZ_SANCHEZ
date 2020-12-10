@@ -25,6 +25,7 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import clientClavardage.Conversation;
+import clientClavardage.DatabaseConv_mess;
 import clientLogin.DatabaseLogin;
 import clientLogin.User;
 
@@ -59,18 +60,20 @@ public class MainFrame {
 
 				/*DATABASE connection*/
 				//Class.forName("sun.jdbc.odbc.JdbcOdbcDriver");
-				try {
-					Class.forName("com.mysql.cj.jdbc.Driver");
-				
-				
+				try {/*
+				Class.forName("com.mysql.cj.jdbc.Driver");
 				String DBurl = "jdbc:mysql://localhost/conv_mess?zeroDateTimeBehavior=CONVERT_TO_NULL&serverTimezone=UTC";
 				Connection con = DriverManager.getConnection(DBurl, "root", "");
 				ResultSet result = null;
 				String requete = "SELECT * FROM conversation WHERE User1 = '" + user.getLogin() +"' or User2 = '" + user.getLogin() +"'";
 				Statement stmt = con.createStatement();
-				result = stmt.executeQuery(requete);
+				result = stmt.executeQuery(requete);*/
 				
-				
+					
+				ResultSet result = null;
+				DatabaseConv_mess DB = new DatabaseConv_mess(user.getLogin(), user.getNumPort(), null, -1);
+				DB.selectConvToMainUser();
+				result = DB.getResult();
 				
 				
 				List<String> strings = new ArrayList<String>();
@@ -122,15 +125,16 @@ public class MainFrame {
 			            }
 			        });
 				   
-				   
+				   DB.deconnect();
 				   panel.add(listConv);
 				   frame.repaint();
 				   frame.setVisible(true);
 
-				} catch (ClassNotFoundException | SQLException e) {
+				} catch (SQLException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
-				} 
+				}
+				
 			}
 		});
 	    
