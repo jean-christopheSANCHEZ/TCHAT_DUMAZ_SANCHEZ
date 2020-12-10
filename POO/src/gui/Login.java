@@ -30,10 +30,7 @@ public class Login extends JFrame implements ActionListener {
 
        //Add the buttons.
        JButton logButton = new JButton("Log In");
-       
-       
-       
-      
+
        
        
        user_label = new JLabel();
@@ -70,7 +67,7 @@ public class Login extends JFrame implements ActionListener {
 			    User newUtilisateur;
 				try {
 					
-					
+					/*DATABASE connection*/
 					//Class.forName("sun.jdbc.odbc.JdbcOdbcDriver");
 					Class.forName("com.mysql.cj.jdbc.Driver");
 					
@@ -124,9 +121,11 @@ public class Login extends JFrame implements ActionListener {
 				
 			}
 		});
-       
-       contentPane.add(panel);
+       //setLayout(new BorderLayout());
+       contentPane.add(panel/*,BorderLayout.NORTH*/);
+       //contentPane.add(errorConnectionMessage/*, BorderLayout.SOUTH*/);
 	   frame.pack();
+	   frame.validate();
 	   frame.setSize(400, 300);
 	   frame.setTitle("LogIn");
        frame.setVisible(true);

@@ -28,8 +28,8 @@ public class ConversationPage extends JFrame implements ActionListener{
 	    contentPane.setLayout(new SpringLayout());
 	    
 	    
-	    panel = new JPanel(new GridLayout(2, 1));
-	    add(panel, BorderLayout.CENTER);
+	    panel = new JPanel();
+	    add(panel);
 	    
 	    
 	    JButton back = new JButton("Back to Main Frame");
@@ -43,7 +43,7 @@ public class ConversationPage extends JFrame implements ActionListener{
 		});
 	    
 	    
-	    contentPane.add(panel);
+	    contentPane.add(panel,BorderLayout.SOUTH);
 	    
 	    frame.pack();
 		frame.setSize(1200, 600);

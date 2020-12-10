@@ -6,6 +6,14 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.AbstractListModel;
 import javax.swing.JButton;
@@ -47,7 +55,81 @@ public class MainFrame {
 	    actualiseListConv.addActionListener(new ActionListener() {
 	    	public void actionPerformed(ActionEvent ae) {
 				
-	    		//ici on fait une requete dans la bdd pour remplacer la valeur de la liste par les champ de la bdd correspond aux conv qui contiennent l user logIn
+
+				/*DATABASE connection*/
+				//Class.forName("sun.jdbc.odbc.JdbcOdbcDriver");
+				try {
+					Class.forName("com.mysql.cj.jdbc.Driver");
+				
+				
+				String DBurl = "jdbc:mysql://localhost/conv_mess?zeroDateTimeBehavior=CONVERT_TO_NULL&serverTimezone=UTC";
+				Connection con = DriverManager.getConnection(DBurl, "root", "");
+				ResultSet result = null;
+				String requete = "SELECT * FROM conversation WHERE User1 = '" + user.getLogin() +"' or User2 = '" + user.getLogin() +"'";
+				Statement stmt = con.createStatement();
+				result = stmt.executeQuery(requete);
+				
+				
+				
+				
+				List<String> strings = new ArrayList<String>();
+				
+				String stringInfo = null;
+				ResultSetMetaData rsmd = result.getMetaData();
+				int columnsNumber = rsmd.getColumnCount();
+				   while (result.next()) {
+					   stringInfo = "";
+					   for (int i = 1; i <= columnsNumber; i++) {
+				           //if (i > 1) System.out.print(",  "); 
+				           String columnValue = result.getString(i);
+				           //System.out.print(rsmd.getColumnName(i) + " : " + columnValue);
+				           stringInfo = stringInfo + rsmd.getColumnName(i) + " : " + columnValue + "   ";
+				           
+				           
+				       }
+					   strings.add(stringInfo);
+				       System.out.println("");
+				   } 
+				   System.out.println(strings);
+				   
+				   JList listConv = new JList();
+				   String[] tabConv = new String[strings.size()];
+				   tabConv = strings.toArray(tabConv);
+				   
+				   listConv.setModel(new AbstractListModel() {
+
+					    
+			            @Override
+			            public int getSize() {
+			                return strings.size();
+			            }
+
+			            @Override
+			            public Object getElementAt(int i) {
+			                return strings.get(i);
+			            }
+			        });
+				   
+				   
+				   
+				   
+				   listConv.addListSelectionListener(new ListSelectionListener() {
+
+			            @Override
+			            public void valueChanged(ListSelectionEvent evt) {
+			            	new ConversationPage(user);
+			            }
+			        });
+				   
+				   
+				   panel.add(listConv);
+				   frame.repaint();
+				   frame.setVisible(true);
+
+				} catch (ClassNotFoundException | SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} 
 			}
 		});
 	    
@@ -55,7 +137,7 @@ public class MainFrame {
 	    logOutButton.addActionListener(new ActionListener() {
 	    	public void actionPerformed(ActionEvent ae) {
 				Login newLogPage = new Login();
-				frame.dispose();  
+				frame.dispose();
 			}
 		});
 	    
@@ -72,24 +154,13 @@ public class MainFrame {
 	    
 	    
 	    
-	    /*
-	     * Récupération d'une liste de conversation dans la base de données en enfonction d'un itlisateur, celui qui s'est LogIn 
-	     * on va ffaire ca plus tard je vais donc creer une liste moi init manuellement pour tester mon affichage
-	     * 
-	     * */
+	   
 	    
-	    /* ici je creer les variables conv pour les test*/
-	    
-	    User testDest = new User("le destinataire de test", 3, user.getIp(), 100);
-	    Conversation convTest1 = new Conversation(user, testDest, 1);
-	    Conversation convTest2 = new Conversation(user, testDest, 2);
-	    
-	    JList listConv = new JList();
+	    /*JList listConv = new JList();
 	    
 	    listConv.setModel(new AbstractListModel() {
 
-            String[] strings = {convTest1.toString(), convTest2.toString()};
-
+            String[] strings = { }
             @Override
             public int getSize() {
                 return strings.length;
@@ -110,8 +181,8 @@ public class MainFrame {
                 //frame.dispose();
             }
         });
+	    */
 	    
-	    panel.add(listConv);
 	    
 	    contentPane.add(panel);
 	    

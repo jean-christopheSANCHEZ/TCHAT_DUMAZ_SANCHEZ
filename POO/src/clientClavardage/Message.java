@@ -25,4 +25,7 @@ public class Message {
 		this.dateEnvoie = dateEnvoie;
 	}
 	
+	
+	
+	
 }
