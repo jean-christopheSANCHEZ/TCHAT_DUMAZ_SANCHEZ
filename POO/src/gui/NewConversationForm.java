@@ -16,6 +16,7 @@ import javax.swing.JTextField;
 import javax.swing.SpringLayout;
 
 import clientClavardage.Conversation;
+import clientClavardage.DatabaseConv_mess;
 import clientLogin.User;
 
 public class NewConversationForm extends JFrame implements ActionListener{
@@ -55,19 +56,13 @@ public class NewConversationForm extends JFrame implements ActionListener{
 	       portDest_label = new JLabel();
 	       portDest_label.setText("Port number :");
 	       portDest_text = new JTextField();
-	       
-	       id_label = new JLabel();
-	       id_label.setText("Unique Id conv :");
-	       id_text = new JTextField();
-	       
+
 	       panel = new JPanel(new GridLayout(5, 1));
 	       
 	       panel.add(userDest_label);
 	       panel.add(userDest_text);
 	       panel.add(portDest_label);
 	       panel.add(portDest_text);
-	       panel.add(id_label);
-	       panel.add(id_text);
 	       panel.add(newConvButton);
 	       panel.add(back);
 	       add(panel, BorderLayout.CENTER);
@@ -81,8 +76,9 @@ public class NewConversationForm extends JFrame implements ActionListener{
 					// envoie dans la bdd la nouvelle conv evec les infos
 					try {
 						User destinataire = new User(userDest_text.getText(), 1, InetAddress.getLocalHost(), Integer.parseInt(portDest_text.getText()));
-						Conversation newConv = new Conversation(user, destinataire, Integer.parseInt(id_text.getText()));
-						new MainFrame(user);
+						DatabaseConv_mess DB = new DatabaseConv_mess(user.getLogin(), user.getNumPort(), destinataire.getLogin(), destinataire.getNumPort());
+						DB.addConversation();
+						DB.deconnect();
 						frame.dispose();
 					} catch (NumberFormatException e) {
 						// TODO Auto-generated catch block

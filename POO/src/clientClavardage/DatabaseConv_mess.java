@@ -59,7 +59,18 @@ public class DatabaseConv_mess {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
+	}
+	
+	public void addConversation() {
+		String requete = "INSERT INTO conversation (user1,user2) values ('" + this.user + "','" + this.destinataire + "')";
+		try {
+			stmt = con.createStatement();
+			stmt.executeUpdate(requete);
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 
