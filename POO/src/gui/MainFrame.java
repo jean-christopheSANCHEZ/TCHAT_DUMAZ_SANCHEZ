@@ -25,6 +25,7 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import clientClavardage.Conversation;
+import clientLogin.DatabaseLogin;
 import clientLogin.User;
 
 public class MainFrame {
@@ -138,6 +139,12 @@ public class MainFrame {
 	    	public void actionPerformed(ActionEvent ae) {
 				Login newLogPage = new Login();
 				frame.dispose();
+				
+				DatabaseLogin DB = new DatabaseLogin(user.getLogin(),user.getNumPort());
+				DB.deleteAllField();
+				DB.deconnect();
+				
+				
 			}
 		});
 	    

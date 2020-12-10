@@ -65,10 +65,9 @@ public class Login extends JFrame implements ActionListener {
 				String userName = userName_text.getText();
 			    int portNumber= Integer.parseInt(userPort.getText()); 
 			    User newUtilisateur;
-				try {
+				/*try {
 					
-					/*DATABASE connection*/
-					//Class.forName("sun.jdbc.odbc.JdbcOdbcDriver");
+					
 					Class.forName("com.mysql.cj.jdbc.Driver");
 					
 					String DBurl = "jdbc:mysql://localhost/login?zeroDateTimeBehavior=CONVERT_TO_NULL&serverTimezone=UTC";
@@ -114,9 +113,28 @@ public class Login extends JFrame implements ActionListener {
 					
 					
 				} catch (UnknownHostException | ClassNotFoundException | SQLException e) {
-					// TODO Auto-generated catch block
+					
 					e.printStackTrace();
-				}
+				}*/
+			    
+			    	
+					try {
+						DatabaseLogin DB = new DatabaseLogin(userName,portNumber);
+						DB.insertLoginPort();
+						DB.deconnect();
+						
+						
+						newUtilisateur = new User(userName, 1, InetAddress.getLocalHost(), portNumber);
+						frame.dispose();
+						new MainFrame(newUtilisateur);
+					} catch (UnknownHostException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					
+				
+				
+				
 				
 				
 			}
