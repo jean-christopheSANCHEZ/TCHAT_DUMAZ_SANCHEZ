@@ -6,6 +6,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+import clientLogin.User;
+
 public class DatabaseConv_mess {
 	private String DBurl;
 	private Connection con;
@@ -86,8 +88,8 @@ public class DatabaseConv_mess {
 		}
 	}
 	
-	public void insertMessage(Message message, int idConvEnCours) {
-		String requete = "INSERT INTO message (id,time,data) values ('" + idConvEnCours + "','" + message.getDateEnvoie() + "','" + message.getData() +"')";
+	public void insertMessage(Message message, int idConvEnCours, User userEmetteur) {
+		String requete = "INSERT INTO message (id,timestamp,data,loginEmetteur) values ('" + idConvEnCours + "','" + message.getDateEnvoie() + "','" + message.getData() +"','" + userEmetteur.getLogin() +"')";
 		try {
 			stmt = con.createStatement();
 			stmt.executeUpdate(requete);

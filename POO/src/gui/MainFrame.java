@@ -138,10 +138,11 @@ public class MainFrame {
 			            	ResultSet result = DB.getResult();
 			            	try {
 			            		if(result.next()) {
+			            			System.out.println("conv page open");
 			            			//System.out.println(result.getString(1) + "   "+ result.getString(2) + "  " +result.getString(3));
 			            			User destinataire = new User(sTab[5],Integer.parseInt(result.getString(1)) ,InetAddress.getLocalHost(),Integer.parseInt(result.getString(3)) );
 					            	Conversation conv = new Conversation(user, destinataire, Integer.parseInt(sTab[1]));
-					            	new ConversationPage(conv);
+					            	new ConversationPage(conv, user);
 					            	DB.deconnect();
 			            		}
 								

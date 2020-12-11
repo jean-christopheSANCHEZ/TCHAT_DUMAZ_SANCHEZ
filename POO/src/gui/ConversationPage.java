@@ -1,10 +1,13 @@
 package gui;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Container;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -13,12 +16,13 @@ import javax.swing.*;
 import javax.swing.SpringLayout;
 
 import clientClavardage.Conversation;
+import clientClavardage.DatabaseConv_mess;
 import clientLogin.User;
 
 public class ConversationPage extends JFrame implements ActionListener{
 	
 	
-	public ConversationPage(Conversation conv) {
+	public ConversationPage(Conversation conv, User user) {
 		
 		JFrame frame = new JFrame("New conv");
 	    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -30,9 +34,26 @@ public class ConversationPage extends JFrame implements ActionListener{
 	    JPanel panelBas = new JPanel(new GridLayout(3,1));
 	    JPanel panelHaut = new JPanel(new GridLayout(1,1));
 	    
-	    JLabel test = new JLabel("test");
-	    panelHaut.add(test);
+	    DatabaseConv_mess DB = new DatabaseConv_mess(user.getLogin(), user.getNumPort(), conv.getUser2().getLogin(), conv.getUser2().getNumPort());
+	    DB.selectListMessageById(conv.getId());
+	    ResultSet result = DB.getResult();
 	    
+	    try {
+			while(result.next()) {
+				JLabel mess = new JLabel(result.getString(2) +" : " + result.getString(3));
+				if(result.getString(4).equals(user.getLogin())) {
+					mess.setForeground(Color.blue);
+				}else {
+					mess.setForeground(Color.green);
+				}
+				panelHaut.add(mess);
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	    
+	    DB.deconnect();
 	    
 	    
 	    JTextField newMessage = new JTextField("Enter new message");
