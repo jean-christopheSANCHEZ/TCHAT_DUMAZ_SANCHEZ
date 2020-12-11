@@ -7,11 +7,19 @@ public class Message {
 	private Timestamp dateEnvoie;
 	
 	
-	public Message(String data, Timestamp dateEnvoie) {
+	public Message(String data) {
 		super();
 		this.data = data;
 		this.dateEnvoie = dateEnvoie;
 	}
+	
+	public Message(String data, int type) {
+		super();
+		
+		this.data = data;
+		this.dateEnvoie = dateEnvoie;
+	}
+	
 	public String getData() {
 		return data;
 	}
