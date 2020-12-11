@@ -5,7 +5,7 @@ import java.sql.Timestamp;
 public class Message {
 	private String data;
 	private Timestamp dateEnvoie;
-	
+	private int type;
 	
 	public Message(String data) {
 		super();
@@ -15,9 +15,12 @@ public class Message {
 	
 	public Message(String data, int type) {
 		super();
-		
 		this.data = data;
 		this.dateEnvoie = dateEnvoie;
+		this.type = type;
+		
+		
+		
 	}
 	
 	public String getData() {
@@ -31,6 +34,14 @@ public class Message {
 	}
 	public void setDateEnvoie(Timestamp dateEnvoie) {
 		this.dateEnvoie = dateEnvoie;
+	}
+
+	public int getType() {
+		return type;
+	}
+
+	public void setType(int type) {
+		this.type = type;
 	}
 	
 	

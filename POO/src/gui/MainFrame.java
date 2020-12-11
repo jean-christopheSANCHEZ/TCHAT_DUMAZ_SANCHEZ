@@ -1,6 +1,9 @@
 package gui;
 
+import java.awt.BorderLayout;
 import java.awt.Container;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -15,12 +18,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.swing.AbstractListModel;
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JList;
-import javax.swing.JPanel;
-import javax.swing.SpringLayout;
+import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
@@ -35,25 +33,35 @@ public class MainFrame {
 	public MainFrame(User user) {
 	
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.setSize(1920,1080);
+		frame.setSize(1800,1000);
 		frame.setTitle(user.getLogin()+" connected on port : " +user.getNumPort());
 		
 		
 		
 		Container contentPane = frame.getContentPane();
-	    contentPane.setLayout(new SpringLayout());
+	    
+	    
+	    Container contentListConv = frame.getContentPane();
+	    
 
 	    //Add the buttons.
 	    JButton logOutButton = new JButton("Log Out");
+	    //JTextField rien = new JTextField(" ");
 	    
-	    JPanel panel = new JPanel(new GridLayout(2, 2));
+	    JPanel panel = new JPanel(new GridLayout(1, 3));    
+	   
+	    
 	    panel.add(logOutButton);
 	    
+	    
+	    JPanel panelList = new JPanel(new GridLayout(2, 1));
 	    
 	    
 	    
 	    JButton actualiseListConv = new JButton("Refresh conversation list");
 	    panel.add(actualiseListConv);
+	    
+	    JList listConv = new JList();
 	    actualiseListConv.addActionListener(new ActionListener() {
 	    	public void actionPerformed(ActionEvent ae) {
 				
@@ -87,7 +95,7 @@ public class MainFrame {
 				           //if (i > 1) System.out.print(",  "); 
 				           String columnValue = result.getString(i);
 				           //System.out.print(rsmd.getColumnName(i) + " : " + columnValue);
-				           stringInfo = stringInfo + rsmd.getColumnName(i) + " : " + columnValue + "   ";
+				           stringInfo = stringInfo + rsmd.getColumnName(i) + ":" + columnValue + ":   ";
 				           
 				           
 				       }
@@ -96,7 +104,7 @@ public class MainFrame {
 				   } 
 				   System.out.println(strings);
 				   
-				   JList listConv = new JList();
+				   //JList listConv = new JList();
 				   String[] tabConv = new String[strings.size()];
 				   tabConv = strings.toArray(tabConv);
 				   
@@ -121,12 +129,33 @@ public class MainFrame {
 
 			            @Override
 			            public void valueChanged(ListSelectionEvent evt) {
-			            	new ConversationPage(user);
+			            	String s = (String) listConv.getSelectedValue();
+			            	//System.out.println(s);
+			            	String sTab [] = s.split(":");
+			            	//System.out.println(sTab[1] + "   "+ sTab[3] + "  " +sTab[5]);
+			            	DatabaseLogin DB = new DatabaseLogin(user.getLogin(), user.getNumPort());
+			            	DB.selectUserByLogin(sTab[5]);
+			            	ResultSet result = DB.getResult();
+			            	try {
+			            		if(result.next()) {
+			            			//System.out.println(result.getString(1) + "   "+ result.getString(2) + "  " +result.getString(3));
+			            			User destinataire = new User(sTab[5],Integer.parseInt(result.getString(1)) ,InetAddress.getLocalHost(),Integer.parseInt(result.getString(3)) );
+					            	Conversation conv = new Conversation(user, destinataire, Integer.parseInt(sTab[1]));
+					            	new ConversationPage(conv);
+					            	DB.deconnect();
+			            		}
+								
+							} catch (SQLException | NumberFormatException | UnknownHostException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+			            	
 			            }
 			        });
 				   
 				   DB.deconnect();
-				   panel.add(listConv);
+				   //panel.add(listConv);
+				   
 				   frame.repaint();
 				   frame.setVisible(true);
 
@@ -194,9 +223,15 @@ public class MainFrame {
         });
 	    */
 	    
+	    //panel.add(listConv);
+	    panelList.add(listConv);
+	    //panelList.add(rien);
+	    contentPane.add(panel, BorderLayout.NORTH);
+	    contentListConv.add(panelList, BorderLayout.CENTER);
 	    
-	    contentPane.add(panel);
 	    
+	    frame.setLocationRelativeTo(null);
+	    frame.repaint();
 	    frame.setVisible(true);
 	       
 	}

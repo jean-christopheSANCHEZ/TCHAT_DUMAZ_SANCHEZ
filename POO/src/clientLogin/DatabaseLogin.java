@@ -12,6 +12,7 @@ public class DatabaseLogin {
 	private Connection con;
 	private String requete;
 	private Statement stmt;
+	private ResultSet result = null;
 	
 	public DatabaseLogin(String login, int numPort) {
 		try {
@@ -65,6 +66,18 @@ public class DatabaseLogin {
 		}
 	}
 	
+	public void selectUserByLogin(String login) {
+		String requete = "SELECT * FROM user WHERE identifiant = '" + login +"'";
+		try {
+			stmt = con.createStatement();
+			this.result = stmt.executeQuery(requete);
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
 	public String getLogin() {
 		return login;
 	}
@@ -83,11 +96,11 @@ public class DatabaseLogin {
 	public void setNumPort(int numPort) {
 		this.numPort = numPort;
 	}
-	
-	
-	
-	
-	
+
+	public ResultSet getResult() {
+		return result;
+	}
+
 	
 	
 }

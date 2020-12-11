@@ -49,7 +49,7 @@ public class UDPBroadcast {
 			serveur.send(outPacket);
 			
 			}
-			serveur.close();
+			//serveur.close();
 			
 				}catch (SocketException e) {
 		               e.printStackTrace();

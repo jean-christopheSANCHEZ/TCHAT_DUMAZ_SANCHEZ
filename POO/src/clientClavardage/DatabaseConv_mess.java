@@ -73,6 +73,31 @@ public class DatabaseConv_mess {
 		}
 	}
 	
+	
+	public void selectListMessageById(int id) {
+		String requete = "SELECT * FROM message WHERE id = '" + id +"'";
+		try {
+			stmt = con.createStatement();
+			this.result = stmt.executeQuery(requete);
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	public void insertMessage(Message message, int idConvEnCours) {
+		String requete = "INSERT INTO message (id,time,data) values ('" + idConvEnCours + "','" + message.getDateEnvoie() + "','" + message.getData() +"')";
+		try {
+			stmt = con.createStatement();
+			stmt.executeUpdate(requete);
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
 
 	public String getUser() {
 		return user;

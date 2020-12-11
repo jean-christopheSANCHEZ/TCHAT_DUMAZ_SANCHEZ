@@ -38,6 +38,10 @@ public class Conversation {
 	public String toString() {
 		return "Conversation of " + user1.getLogin() + " to " + user2.getLogin() + ", id=" + id + "";
 	}
+
+	public int getId() {
+		return id;
+	}
 	
 	
 }
