@@ -79,6 +79,7 @@ public class UDPBroadcast {
 	   		else if(m.getType()==2) {
 	   			
 				// retirer de la base de données local
+	   			DB.deleteByLogin(m.getData());
 	   			
 			}
 			 DB.deconnect();

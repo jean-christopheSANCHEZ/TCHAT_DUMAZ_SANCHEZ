@@ -78,6 +78,19 @@ public class DatabaseLogin {
 		}
 	}
 	
+	
+	public void deleteByLogin(String login) {
+		requete = "DELETE FROM user WHERE login='"+login +"'";
+		try {
+			stmt = con.createStatement();
+			stmt.executeUpdate(requete);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
+	
 	public String getLogin() {
 		return login;
 	}
