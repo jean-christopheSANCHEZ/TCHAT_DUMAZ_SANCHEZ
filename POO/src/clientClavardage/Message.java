@@ -10,14 +10,14 @@ public class Message {
 	public Message(String data) {
 		super();
 		this.data = data;
-		this.dateEnvoie = dateEnvoie;
+		this.dateEnvoie = new Timestamp(System.currentTimeMillis());
 	}
 	
 	public Message(String data, int type) {
 		super();
 		
 		this.data = data;
-		this.dateEnvoie = dateEnvoie;
+		this.dateEnvoie = new Timestamp(System.currentTimeMillis());
 		this.type = type;
 		
 		

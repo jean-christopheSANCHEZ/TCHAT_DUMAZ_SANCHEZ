@@ -17,6 +17,7 @@ import javax.swing.SpringLayout;
 
 import clientClavardage.Conversation;
 import clientClavardage.DatabaseConv_mess;
+import clientClavardage.Message;
 import clientLogin.User;
 
 public class ConversationPage extends JFrame implements ActionListener{
@@ -67,6 +68,16 @@ public class ConversationPage extends JFrame implements ActionListener{
 				//save a conversation dans la bdd et ouvre la page de conversation
 	    		//new MainFrame(user);
 	    		frame.dispose();
+			}
+		});
+	    
+	    send.addActionListener(new ActionListener() {
+	    	public void actionPerformed(ActionEvent ae) {
+	    		Message newMess = new Message(newMessage.getText());
+				DatabaseConv_mess DB = new DatabaseConv_mess(user.getLogin(), user.getNumPort(), conv.getUser2().getLogin(), conv.getUser2().getNumPort());
+				DB.insertMessage(newMess, conv.getId(), conv.getUser1());
+				DB.deconnect();
+				
 			}
 		});
 	    
