@@ -3,6 +3,7 @@ package gui;
 
 import java.sql.*;
 import clientLogin.*;
+import clientLogin.UDPBroadcast.UDPclientBroadcast2;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -119,15 +120,27 @@ public class Login extends JFrame implements ActionListener {
 			    
 			    	
 					try {
-						DatabaseLogin DB = new DatabaseLogin(userName,portNumber);
-						DB.insertLoginPort();
-						DB.deconnect();
-						
-						
+						int state = 0;
 						newUtilisateur = new User(userName, 1, InetAddress.getLocalHost(), portNumber);
-						frame.dispose();
-						new MainFrame(newUtilisateur);
-					} catch (UnknownHostException e) {
+						UDPclientBroadcast2 udpbroadcast = new UDPclientBroadcast2(newUtilisateur.getLogin(), newUtilisateur);
+						state = udpbroadcast.executeBroadcast();
+						
+						if(state ==0) {
+							DatabaseLogin DB = new DatabaseLogin(userName,portNumber);
+							DB.insertLoginPort();
+							DB.deconnect();
+
+							frame.dispose();
+							new MainFrame(newUtilisateur);
+						}else {
+							errorConnectionMessage.setText("Login issue : type an other login ");
+							errorConnectionMessage.setForeground(Color.RED);
+							frame.repaint();
+							
+						}
+					
+						
+					} catch (UnknownHostException  e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}

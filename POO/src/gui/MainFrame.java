@@ -26,12 +26,15 @@ import clientClavardage.Conversation;
 import clientClavardage.DatabaseConv_mess;
 import clientLogin.DatabaseLogin;
 import clientLogin.User;
+import clientLogin.UDPBroadcast;
 
 public class MainFrame {
 	private JFrame frame = new JFrame("Second");
 	
 	public MainFrame(User user) {
-	
+		Thread udpserver = new Thread(new UDPBroadcast.UDPserver(user.getLogin(), user));
+		
+		
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setSize(1800,1000);
 		frame.setTitle(user.getLogin()+" connected on port : " +user.getNumPort());
