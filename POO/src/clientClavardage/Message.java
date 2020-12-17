@@ -15,6 +15,7 @@ public class Message {
 	
 	public Message(String data, int type) {
 		super();
+		
 		this.data = data;
 		this.dateEnvoie = dateEnvoie;
 		this.type = type;
@@ -35,7 +36,6 @@ public class Message {
 	public void setDateEnvoie(Timestamp dateEnvoie) {
 		this.dateEnvoie = dateEnvoie;
 	}
-
 	public int getType() {
 		return type;
 	}
