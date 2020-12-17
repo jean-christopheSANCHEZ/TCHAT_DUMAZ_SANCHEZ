@@ -50,12 +50,16 @@ public class UDPBroadcast {
 			InetAddress clientAddress = inPacket.getAddress();
 			int clientPort = inPacket.getPort();
 			
+			DatabaseLogin DB = new DatabaseLogin(m.getData(),0);
 			
 			if(m.getType()==0) {
-				if(m.getData()!=this.user.getLogin()) {
+				DB.selectUserByLogin(m.getData());
+				
+				if(DB.getResult()==null) {
 				Message m2=new Message(this.user.getLogin(),1);
+				DB.insertLoginPort();
 				}
-				else if(m.getData()==this.user.getLogin()){
+				else if(DB.getResult()!=null){
 					Message m2=new Message(this.user.getLogin(),-1);
 				}
 				ByteArrayOutputStream ArrayStream = new ByteArrayOutputStream();
@@ -70,12 +74,14 @@ public class UDPBroadcast {
 	            byte[] buffer2 = ArrayStream.toByteArray();
 	            DatagramPacket outPacket = new DatagramPacket(buffer2, buffer2.length, clientAddress, clientPort);
 	   			serveur.send(outPacket);
-	   			// + update base de données local
+	   			
 			}
 	   		else if(m.getType()==2) {
+	   			
 				// retirer de la base de données local
+	   			
 			}
-			
+			 DB.deconnect();
 			
 			}
 			
@@ -154,10 +160,18 @@ public class UDPBroadcast {
 	                   }
 		              
 		               if(m2.getType()==1) {
+		            	   
+		            	   DatabaseLogin DB = new DatabaseLogin(m2.getData(),0);
+		            	   DB.insertLoginPort();
+		            	   DB.deconnect();
+		            	   
 		            	   //update base de donnée local = ajout d'un user connecté
 		               }
 		               else if(m2.getType()==-1){
 		            	   //login déjà utilisé
+		            	  
+		            	   System.out.println("erreur login déjà utilisé");
+		            	   //vide la base de données
 		               }
 		               buffer2=new byte[1024];
 		               
