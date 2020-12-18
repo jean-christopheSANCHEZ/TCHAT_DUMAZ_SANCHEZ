@@ -30,13 +30,14 @@ public class UDPBroadcast {
 			System.out.println("Thread ServeurUDP started");
 			DatagramSocket serveur = new DatagramSocket(this.user.getNumPort());
 			
-			byte[] buffer = new byte[1024];
+			//byte[] buffer = new byte[1024];
 			Message m=new Message("");
 			
-			DatagramPacket inPacket = new DatagramPacket(buffer, buffer.length);
+			//DatagramPacket inPacket = new DatagramPacket(buffer, buffer.length);
 			
 			while (true) {
-			
+				byte[] buffer = new byte[1024];
+				DatagramPacket inPacket = new DatagramPacket(buffer, buffer.length);
 			serveur.receive(inPacket);
          	   
          	ByteArrayInputStream ArrayStream2 = new ByteArrayInputStream(inPacket.getData());
@@ -90,7 +91,7 @@ public class UDPBroadcast {
 	            	ObjectOutputStream ObjectStream = new ObjectOutputStream(ArrayStream);
 	                ObjectStream.writeObject(m2);
 	            } catch(IOException e) {
-	                System.err.println("Erreur lors de la sérialisation : " + e);
+	                System.err.println("Erreur lors de la sï¿½rialisation : " + e);
 	                System.exit(-1);
 	            }
 	              
@@ -101,7 +102,7 @@ public class UDPBroadcast {
 			}
 	   		else if(m.getType()==2) {
 	   			
-				// retirer de la base de données local
+				// retirer de la base de donnï¿½es local
 	   			DB.deleteByLogin(m.getData());
 	   			
 			}
@@ -137,7 +138,7 @@ public class UDPBroadcast {
 	            //byte[] buffer = tab.getBytes();
 	            
 	            try {
-	               //On initialise la connexion côté client
+	               //On initialise la connexion cï¿½tï¿½ client
 	               DatagramSocket client = new DatagramSocket();
 	               
 	               Message m = new Message(login, 0);
@@ -146,23 +147,23 @@ public class UDPBroadcast {
 	                   ObjectOutputStream ObjectStream = new ObjectOutputStream(ArrayStream);
 	                   ObjectStream.writeObject(m);
 	               } catch(IOException e) {
-	                   System.err.println("Erreur lors de la sérialisation : " + e);
+	                   System.err.println("Erreur lors de la sï¿½rialisation : " + e);
 	                   System.exit(-1);
 	               }
 	              
 	               byte[] buffer = ArrayStream.toByteArray();
 	               
-	               //On crée notre datagramme
+	               //On crï¿½e notre datagramme
 	               InetAddress adresse = InetAddress.getLocalHost();
 	               DatagramPacket outpacket = new DatagramPacket(buffer, buffer.length, adresse, 2000);
 	               
-	               //On lui affecte les données à envoyer
+	               //On lui affecte les donnï¿½es ï¿½ envoyer
 	               outpacket.setData(buffer);
 	               
 	               //On envoie au serveur
 	               client.send(outpacket);
 	               
-	               //Et on récupère la réponse du serveur
+	               //Et on rï¿½cupï¿½re la rï¿½ponse du serveur
 	               byte[] buffer2 = new byte[1024];
 	               DatagramPacket inpacket = new DatagramPacket(buffer2, buffer2.length);
 	               
@@ -189,13 +190,13 @@ public class UDPBroadcast {
 		            	   DB.insertLoginPort();
 		            	   DB.deconnect();
 		            	   
-		            	   //update base de donnée local = ajout d'un user connecté
+		            	   //update base de donnï¿½e local = ajout d'un user connectï¿½
 		               }
 		               else if(m2.getType()==-1){
-		            	   //login déjà utilisé
+		            	   //login dï¿½jï¿½ utilisï¿½
 		            	  
-		            	   System.out.println("erreur login déjà utilisé");
-		            	   //vide la base de données
+		            	   System.out.println("erreur login dï¿½jï¿½ utilisï¿½");
+		            	   //vide la base de donnï¿½es
 		               }
 		               buffer2=new byte[1024];
 		               
@@ -234,7 +235,7 @@ public class UDPBroadcast {
 	            //byte[] buffer = tab.getBytes();
 	            
 	            try {
-	               //On initialise la connexion côté client
+	               //On initialise la connexion cï¿½tï¿½ client
 	               DatagramSocket client = new DatagramSocket();
 	               
 	               Message m = new Message(login, 0);
@@ -243,36 +244,38 @@ public class UDPBroadcast {
 	                   ObjectOutputStream ObjectStream = new ObjectOutputStream(ArrayStream);
 	                   ObjectStream.writeObject(m);
 	               } catch(IOException e) {
-	                   System.err.println("Erreur lors de la sérialisation : " + e);
+	                   System.err.println("Erreur lors de la sï¿½rialisation : " + e);
 	                   System.exit(-1);
 	               }
 	              
 	               byte[] buffer = ArrayStream.toByteArray();
 	               
-	               //On crée notre datagramme
+	               //On crï¿½e notre datagramme
 	               InetAddress adresse = InetAddress.getLocalHost();
 	               DatagramPacket outpacket = new DatagramPacket(buffer, buffer.length, adresse, 2000);
 	               DatagramPacket outpacket2 = new DatagramPacket(buffer, buffer.length, adresse, 3000);
-	               //On lui affecte les données à envoyer
+	               //On lui affecte les donnï¿½es ï¿½ envoyer
 	               outpacket.setData(buffer);
 	               
 	               System.out.println("Envoie du broadcast");
 	               //On envoie au serveur
 	               client.send(outpacket);
 	               client.send(outpacket2);
-	               //Et on récupère la réponse du serveur
-	               byte[] buffer2 = new byte[1024];
-	               DatagramPacket inpacket = new DatagramPacket(buffer2, buffer2.length);
+	               //Et on rï¿½cupï¿½re la rï¿½ponse du serveur
+	               //byte[] buffer2 = new byte[1024];
+	               //DatagramPacket inpacket = new DatagramPacket(buffer2, buffer2.length);
 	               
-	               //long time = System.currentTimeMillis();
-	               //long fin=time + 5000;
+	               /*long time = System.currentTimeMillis();
+	               long fin=time + 5000;*/
 	               Message m2=new Message("");
 	               
 	               client.setSoTimeout(4000);
 	               while(true/*fin > System.currentTimeMillis()*/) {
-	            	   System.out.println("Attente des réponses ...");
+	            	   byte[] buffer2 = new byte[1024];
+		               DatagramPacket inpacket = new DatagramPacket(buffer2, buffer2.length);
+	            	   System.out.println("Attente des rï¿½ponses ...");
 	            	   client.receive(inpacket);
-	            	   System.out.println("Une réponse reçu !" + inpacket.getPort());
+	            	   System.out.println("Une rï¿½ponse reï¿½u !" + inpacket.getPort());
 	            	   ByteArrayInputStream ArrayStream2 = new ByteArrayInputStream(inpacket.getData());
 	                   ObjectInputStream ObjectStream2 = new ObjectInputStream(ArrayStream2);
 	                   try {
@@ -288,13 +291,13 @@ public class UDPBroadcast {
 		            	   DB.insertLoginPort();
 		            	   DB.deconnect();
 		            	   
-		            	   //update base de donnée local = ajout d'un user connecté
+		            	   //update base de donnï¿½e local = ajout d'un user connectï¿½
 		               }
 		               else if(m2.getType()==-1){
-		            	   //login déjà utilisé
+		            	   //login dï¿½jï¿½ utilisï¿½
 		            	  state=-1;
-		            	   System.out.println("erreur login déjà utilisé");
-		            	   //vide la base de données
+		            	   System.out.println("erreur login dï¿½jï¿½ utilisï¿½");
+		            	   //vide la base de donnï¿½es
 		               }
 		               //buffer2=new byte[1024];
 		               
@@ -331,7 +334,7 @@ public class UDPBroadcast {
 		public void run() {
 			System.out.println("Thread Disconnect started");
 			try {
-	               //On initialise la connexion côté client
+	               //On initialise la connexion cï¿½tï¿½ client
 	               DatagramSocket client = new DatagramSocket();
 	               
 	               Message m = new Message(this.user.getLogin(), 2);
@@ -340,17 +343,17 @@ public class UDPBroadcast {
 	                   ObjectOutputStream ObjectStream = new ObjectOutputStream(ArrayStream);
 	                   ObjectStream.writeObject(m);
 	               } catch(IOException e) {
-	                   System.err.println("Erreur lors de la sérialisation : " + e);
+	                   System.err.println("Erreur lors de la sï¿½rialisation : " + e);
 	                   System.exit(-1);
 	               }
 	              
 	               byte[] buffer = ArrayStream.toByteArray();
 	               
-	               //On crée notre datagramme
+	               //On crï¿½e notre datagramme
 	               InetAddress adresse = InetAddress.getByName("255.255.255.255");
 	               DatagramPacket outpacket = new DatagramPacket(buffer, buffer.length, adresse, 2000);
 	               
-	               //On lui affecte les données à envoyer
+	               //On lui affecte les donnï¿½es ï¿½ envoyer
 	               outpacket.setData(buffer);
 	               
 	               //On envoie au serveur
@@ -368,5 +371,5 @@ public class UDPBroadcast {
 		}
 	}
 	
-	//  Thread ClientBroadcast = new Thread(new UDPclientBroadcast("Données",1000)); 
+	//  Thread ClientBroadcast = new Thread(new UDPclientBroadcast("Donnï¿½es",1000)); 
 }
