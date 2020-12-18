@@ -134,7 +134,7 @@ public class UDPBroadcast {
 	               byte[] buffer = ArrayStream.toByteArray();
 	               
 	               //On crée notre datagramme
-	               InetAddress adresse = InetAddress.getByName("255.255.255.255");
+	               InetAddress adresse = InetAddress.getLocalHost();
 	               DatagramPacket outpacket = new DatagramPacket(buffer, buffer.length, adresse, 2000);
 	               
 	               //On lui affecte les données à envoyer
@@ -148,7 +148,7 @@ public class UDPBroadcast {
 	               DatagramPacket inpacket = new DatagramPacket(buffer2, buffer2.length);
 	               
 	               long time = System.currentTimeMillis();
-	               long fin=time + 5000;
+	               long fin=time + 2000;
 	               Message m2=new Message("");
 	               
 	               while(fin > System.currentTimeMillis()) {
