@@ -252,14 +252,14 @@ public class UDPBroadcast {
 	               //On crée notre datagramme
 	               InetAddress adresse = InetAddress.getLocalHost();
 	               DatagramPacket outpacket = new DatagramPacket(buffer, buffer.length, adresse, 2000);
-	               
+	               DatagramPacket outpacket2 = new DatagramPacket(buffer, buffer.length, adresse, 3000);
 	               //On lui affecte les données à envoyer
 	               outpacket.setData(buffer);
 	               
 	               System.out.println("Envoie du broadcast");
 	               //On envoie au serveur
 	               client.send(outpacket);
-	               
+	               client.send(outpacket2);
 	               //Et on récupère la réponse du serveur
 	               byte[] buffer2 = new byte[1024];
 	               DatagramPacket inpacket = new DatagramPacket(buffer2, buffer2.length);
@@ -272,7 +272,7 @@ public class UDPBroadcast {
 	               while(fin > System.currentTimeMillis()) {
 	            	   System.out.println("Attente des réponses ...");
 	            	   client.receive(inpacket);
-	            	   System.out.println("Une réponse reçu !");
+	            	   System.out.println("Une réponse reçu !" + inpacket.getPort());
 	            	   ByteArrayInputStream ArrayStream2 = new ByteArrayInputStream(inpacket.getData());
 	                   ObjectInputStream ObjectStream2 = new ObjectInputStream(ArrayStream2);
 	                   try {
