@@ -30,13 +30,14 @@ public class UDPBroadcast {
 			System.out.println("Thread ServeurUDP started");
 			DatagramSocket serveur = new DatagramSocket(this.user.getNumPort());
 			
-			byte[] buffer = new byte[1024];
+			//byte[] buffer = new byte[1024];
 			Message m=new Message("");
 			
-			DatagramPacket inPacket = new DatagramPacket(buffer, buffer.length);
+			//DatagramPacket inPacket = new DatagramPacket(buffer, buffer.length);
 			
 			while (true) {
-			
+				byte[] buffer = new byte[1024];
+				DatagramPacket inPacket = new DatagramPacket(buffer, buffer.length);
 			serveur.receive(inPacket);
          	   
          	ByteArrayInputStream ArrayStream2 = new ByteArrayInputStream(inPacket.getData());
@@ -261,15 +262,17 @@ public class UDPBroadcast {
 	               client.send(outpacket);
 	               client.send(outpacket2);
 	               //Et on récupère la réponse du serveur
-	               byte[] buffer2 = new byte[1024];
-	               DatagramPacket inpacket = new DatagramPacket(buffer2, buffer2.length);
+	               //byte[] buffer2 = new byte[1024];
+	               //DatagramPacket inpacket = new DatagramPacket(buffer2, buffer2.length);
 	               
-	               long time = System.currentTimeMillis();
-	               long fin=time + 5000;
+	               /*long time = System.currentTimeMillis();
+	               long fin=time + 5000;*/
 	               Message m2=new Message("");
 	               
 	               client.setSoTimeout(4000);
-	               while(fin > System.currentTimeMillis()) {
+	               while(true/*fin > System.currentTimeMillis()*/) {
+	            	   byte[] buffer2 = new byte[1024];
+		               DatagramPacket inpacket = new DatagramPacket(buffer2, buffer2.length);
 	            	   System.out.println("Attente des réponses ...");
 	            	   client.receive(inpacket);
 	            	   System.out.println("Une réponse reçu !" + inpacket.getPort());
@@ -296,11 +299,11 @@ public class UDPBroadcast {
 		            	   System.out.println("erreur login déjà utilisé");
 		            	   //vide la base de données
 		               }
-		               buffer2=new byte[1024];
+		               //buffer2=new byte[1024];
 		               
 	               }         
 	               
-	               client.close();
+	               //client.close();
 
 	                            
 	            } catch (SocketException e) {
