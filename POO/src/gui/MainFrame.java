@@ -33,7 +33,7 @@ public class MainFrame {
 	
 	public MainFrame(User user) {
 		Thread udpserver = new Thread(new UDPBroadcast.UDPserver(user.getLogin(), user));
-		
+		udpserver.start();
 		
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setSize(1800,1000);

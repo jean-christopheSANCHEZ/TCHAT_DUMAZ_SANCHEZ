@@ -1,8 +1,9 @@
 package clientClavardage;
 
+import java.io.Serializable;
 import java.sql.Timestamp;
 
-public class Message {
+public class Message implements Serializable{
 	private String data;
 	private Timestamp dateEnvoie;
 	private int type;

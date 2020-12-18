@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.*;
+import java.sql.SQLException;
 
 import clientClavardage.Message;
 
@@ -51,21 +52,39 @@ public class UDPBroadcast {
 			int clientPort = inPacket.getPort();
 			
 			DatabaseLogin DB = new DatabaseLogin(m.getData(),clientPort);
-			Message m2=new Message("",0);
+			Message m2=new Message("",-1);
 			
 			if(m.getType()==0) {
-				DB.selectUserByLogin(m.getData());
+				//try {
+				/*DB.selectUserByLogin(m.getData());
+				System.out.println(m.getData());
+				System.out.println(DB.getResult().next());
 				
-				if(DB.getResult()==null) {
-				m2.setData(this.user.getLogin());
-				m2.setType(1);
-				DB.insertLoginPort();
-				}
-				else if(DB.getResult()!=null){
+					if(DB.getResult().next()) {
 					m2.setData(this.user.getLogin());
 					m2.setType(-1);
+					}
+					else{
+						m2.setData(this.user.getLogin());
+						m2.setType(1);
+						DB.insertLoginPort();
+						
+					}*/
 					
-				}
+					if(m.getData().equals(this.user.getLogin())) {
+						m2.setData(this.user.getLogin());
+						m2.setType(-1);
+					}else {
+						m2.setData(this.user.getLogin());
+						m2.setType(1);
+					}
+				//} catch (SQLException e1) {
+					// TODO Auto-generated catch block
+					//e1.printStackTrace();
+				//}
+					
+					
+					
 				ByteArrayOutputStream ArrayStream = new ByteArrayOutputStream();
 	            try {
 	            	ObjectOutputStream ObjectStream = new ObjectOutputStream(ArrayStream);
@@ -231,12 +250,13 @@ public class UDPBroadcast {
 	               byte[] buffer = ArrayStream.toByteArray();
 	               
 	               //On crée notre datagramme
-	               InetAddress adresse = InetAddress.getByName("255.255.255.255");
+	               InetAddress adresse = InetAddress.getLocalHost();
 	               DatagramPacket outpacket = new DatagramPacket(buffer, buffer.length, adresse, 2000);
 	               
 	               //On lui affecte les données à envoyer
 	               outpacket.setData(buffer);
 	               
+	               System.out.println("Envoie du broadcast");
 	               //On envoie au serveur
 	               client.send(outpacket);
 	               
@@ -248,10 +268,11 @@ public class UDPBroadcast {
 	               long fin=time + 5000;
 	               Message m2=new Message("");
 	               
+	               client.setSoTimeout(4000);
 	               while(fin > System.currentTimeMillis()) {
-	            	   
+	            	   System.out.println("Attente des réponses ...");
 	            	   client.receive(inpacket);
-	            	   
+	            	   System.out.println("Une réponse reçu !");
 	            	   ByteArrayInputStream ArrayStream2 = new ByteArrayInputStream(inpacket.getData());
 	                   ObjectInputStream ObjectStream2 = new ObjectInputStream(ArrayStream2);
 	                   try {
@@ -263,7 +284,7 @@ public class UDPBroadcast {
 		              
 		               if(m2.getType()==1) {
 		            	   
-		            	   DatabaseLogin DB = new DatabaseLogin(m2.getData(),0);
+		            	   DatabaseLogin DB = new DatabaseLogin(m2.getData(),inpacket.getPort());
 		            	   DB.insertLoginPort();
 		            	   DB.deconnect();
 		            	   
