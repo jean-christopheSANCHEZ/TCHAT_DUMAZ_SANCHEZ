@@ -1,7 +1,9 @@
 package clientClavardage;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 
@@ -66,4 +68,30 @@ public class TCPconvInit {
 		}
 	}
 	
+	public static class TCPstartconv implements Runnable{
+		
+		final User destination;
+		final Message message;
+		
+		public TCPstartconv(User dest,Message m) {
+			this.destination=dest;
+			this.message=m;
+		}
+		
+		public void run() {
+			try {
+				Socket link = new Socket(this.destination.getIp(),this.destination.getNumPort());
+				ObjectOutputStream oos=new ObjectOutputStream(link.getOutputStream());
+				oos.writeObject(this.message);
+				link.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			
+			
+		}
+		
+		
+		
+	}
 }
