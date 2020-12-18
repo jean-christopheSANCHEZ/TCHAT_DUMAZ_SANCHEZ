@@ -264,12 +264,12 @@ public class UDPBroadcast {
 	               byte[] buffer2 = new byte[1024];
 	               DatagramPacket inpacket = new DatagramPacket(buffer2, buffer2.length);
 	               
-	               long time = System.currentTimeMillis();
-	               long fin=time + 5000;
+	               //long time = System.currentTimeMillis();
+	               //long fin=time + 5000;
 	               Message m2=new Message("");
 	               
 	               client.setSoTimeout(4000);
-	               while(fin > System.currentTimeMillis()) {
+	               while(true/*fin > System.currentTimeMillis()*/) {
 	            	   System.out.println("Attente des réponses ...");
 	            	   client.receive(inpacket);
 	            	   System.out.println("Une réponse reçu !" + inpacket.getPort());
@@ -296,11 +296,11 @@ public class UDPBroadcast {
 		            	   System.out.println("erreur login déjà utilisé");
 		            	   //vide la base de données
 		               }
-		               buffer2=new byte[1024];
+		               //buffer2=new byte[1024];
 		               
 	               }         
 	               
-	               client.close();
+	               //client.close();
 
 	                            
 	            } catch (SocketException e) {
@@ -315,6 +315,8 @@ public class UDPBroadcast {
 	   }
 	}
 	
+	
+
 	
 	
 	

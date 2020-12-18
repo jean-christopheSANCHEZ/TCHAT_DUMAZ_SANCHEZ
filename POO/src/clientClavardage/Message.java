@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.sql.Timestamp;
 
 public class Message implements Serializable{
+	private String user;
 	private String data;
 	private Timestamp dateEnvoie;
 	private int type;
@@ -43,6 +44,14 @@ public class Message implements Serializable{
 
 	public void setType(int type) {
 		this.type = type;
+	}
+
+	public String getUser() {
+		return user;
+	}
+
+	public void setUser(String user) {
+		this.user = user;
 	}
 	
 	
