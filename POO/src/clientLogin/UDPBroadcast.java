@@ -27,7 +27,7 @@ public class UDPBroadcast {
 			try {
 					
 			System.out.println("Thread ServeurUDP started");
-			DatagramSocket serveur = new DatagramSocket(2000);
+			DatagramSocket serveur = new DatagramSocket(this.user.getNumPort());
 			
 			byte[] buffer = new byte[1024];
 			Message m=new Message("");
@@ -50,22 +50,26 @@ public class UDPBroadcast {
 			InetAddress clientAddress = inPacket.getAddress();
 			int clientPort = inPacket.getPort();
 			
-			DatabaseLogin DB = new DatabaseLogin(m.getData(),0);
+			DatabaseLogin DB = new DatabaseLogin(m.getData(),clientPort);
+			Message m2=new Message("",0);
 			
 			if(m.getType()==0) {
 				DB.selectUserByLogin(m.getData());
 				
 				if(DB.getResult()==null) {
-				Message m2=new Message(this.user.getLogin(),1);
+				m2.setData(this.user.getLogin());
+				m2.setType(1);
 				DB.insertLoginPort();
 				}
 				else if(DB.getResult()!=null){
-					Message m2=new Message(this.user.getLogin(),-1);
+					m2.setData(this.user.getLogin());
+					m2.setType(-1);
+					
 				}
 				ByteArrayOutputStream ArrayStream = new ByteArrayOutputStream();
 	            try {
 	            	ObjectOutputStream ObjectStream = new ObjectOutputStream(ArrayStream);
-	                ObjectStream.writeObject(m);
+	                ObjectStream.writeObject(m2);
 	            } catch(IOException e) {
 	                System.err.println("Erreur lors de la sérialisation : " + e);
 	                System.exit(-1);
