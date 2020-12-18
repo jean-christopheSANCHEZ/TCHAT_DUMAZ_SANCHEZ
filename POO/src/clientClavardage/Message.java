@@ -3,8 +3,10 @@ package clientClavardage;
 import java.io.Serializable;
 import java.sql.Timestamp;
 
+import clientLogin.User;
+
 public class Message implements Serializable{
-	private String user;
+	private User user;
 	private String data;
 	private Timestamp dateEnvoie;
 	private int type;
@@ -46,11 +48,11 @@ public class Message implements Serializable{
 		this.type = type;
 	}
 
-	public String getUser() {
-		return user;
+	public User getUser() {
+		return this.user;
 	}
 
-	public void setUser(String user) {
+	public void setUser(User user) {
 		this.user = user;
 	}
 	

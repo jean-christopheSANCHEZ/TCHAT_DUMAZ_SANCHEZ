@@ -18,6 +18,7 @@ import javax.swing.SpringLayout;
 import clientClavardage.Conversation;
 import clientClavardage.DatabaseConv_mess;
 import clientClavardage.Message;
+import clientClavardage.TCPconvInit;
 import clientLogin.User;
 
 public class ConversationPage extends JFrame implements ActionListener{
@@ -74,9 +75,11 @@ public class ConversationPage extends JFrame implements ActionListener{
 	    send.addActionListener(new ActionListener() {
 	    	public void actionPerformed(ActionEvent ae) {
 	    		Message newMess = new Message(newMessage.getText());
-				DatabaseConv_mess DB = new DatabaseConv_mess(user.getLogin(), user.getNumPort(), conv.getUser2().getLogin(), conv.getUser2().getNumPort());
+				/*DatabaseConv_mess DB = new DatabaseConv_mess(user.getLogin(), user.getNumPort(), conv.getUser2().getLogin(), conv.getUser2().getNumPort());
 				DB.insertMessage(newMess, conv.getId(), conv.getUser1());
-				DB.deconnect();
+				DB.deconnect();*/
+	    		Thread tcpsendmessage = new Thread(new TCPconvInit.TCPstartconv(conv.getUser2(), newMess));
+	    		tcpsendmessage.start();
 				
 			}
 		});

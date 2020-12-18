@@ -53,12 +53,12 @@ public class TCPconvInit {
 	        	Message m= new Message("",0);
 	            InputStream is = link.getInputStream();
 	            int rcv = 0;
-	            while ((rcv = is.read()) != 0) {
+	            
 	            	ObjectInputStream ois = new ObjectInputStream(is);
 	            	m=(Message) ois.readObject();
-	                System.out.println("Message from "+m.getUser()+" : "+m.getData());
+	                System.out.println("Message from : "+m.getData());
 	                
-	            }
+	            
 	            
 	            is.close();
 	            link.close();
@@ -80,7 +80,7 @@ public class TCPconvInit {
 		
 		public void run() {
 			try {
-				Socket link = new Socket(this.destination.getIp(),this.destination.getNumPort());
+				Socket link = new Socket(this.destination.getIp(),this.destination.getNumPort()+1);
 				ObjectOutputStream oos=new ObjectOutputStream(link.getOutputStream());
 				oos.writeObject(this.message);
 				link.close();
