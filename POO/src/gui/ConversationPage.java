@@ -74,7 +74,7 @@ public class ConversationPage extends JFrame implements ActionListener{
 	    
 	    send.addActionListener(new ActionListener() {
 	    	public void actionPerformed(ActionEvent ae) {
-	    		Message newMess = new Message(newMessage.getText());
+	    		Message newMess = new Message(newMessage.getText(), user);
 				/*DatabaseConv_mess DB = new DatabaseConv_mess(user.getLogin(), user.getNumPort(), conv.getUser2().getLogin(), conv.getUser2().getNumPort());
 				DB.insertMessage(newMess, conv.getId(), conv.getUser1());
 				DB.deconnect();*/

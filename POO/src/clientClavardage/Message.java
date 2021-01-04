@@ -6,6 +6,10 @@ import java.sql.Timestamp;
 import clientLogin.User;
 
 public class Message implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private User user;
 	private String data;
 	private Timestamp dateEnvoie;
@@ -14,6 +18,13 @@ public class Message implements Serializable{
 	public Message(String data) {
 		super();
 		this.data = data;
+		this.dateEnvoie = new Timestamp(System.currentTimeMillis());
+	}
+	
+	public Message(String data, User envoyeur) {
+		super();
+		this.data = data;
+		this.user = envoyeur;
 		this.dateEnvoie = new Timestamp(System.currentTimeMillis());
 	}
 	

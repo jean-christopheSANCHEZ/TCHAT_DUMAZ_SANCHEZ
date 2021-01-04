@@ -50,14 +50,17 @@ public class TCPconvInit {
 		public void run() {
 			
 	        try {
-	        	Message m= new Message("",0);
+	        	Message m= new Message("");
 	            InputStream is = link.getInputStream();
 	            int rcv = 0;
 	            
 	            	ObjectInputStream ois = new ObjectInputStream(is);
 	            	m=(Message) ois.readObject();
-	                System.out.println("Message from : "+m.getData());
+	                System.out.println("Message from " + m.getUser().getLogin() +" : "+m.getData());
 	                
+	            	//trouve l'envoyeur du message
+	            	// faire une recherche dans BDD conv si conv existe ajout msg sinon ajout conv puis ajout msg
+	            	
 	            
 	            
 	            is.close();
