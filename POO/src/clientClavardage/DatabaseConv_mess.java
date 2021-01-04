@@ -63,6 +63,20 @@ public class DatabaseConv_mess {
 		}
 	}
 	
+	
+	public void selectConv(User user1, User user2) {
+		String requete = "SELECT * FROM conversation WHERE User1 = '" + user1.getLogin() +"' AND User2 = '" + user2.getLogin() +"' OR User1 = '" + user2.getLogin() +"' AND User2 = '" + user1.getLogin() +"'";
+		try {
+			stmt = con.createStatement();
+			this.result = stmt.executeQuery(requete);
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	
 	public void addConversation() {
 		String requete = "INSERT INTO conversation (user1,user2) values ('" + this.user + "','" + this.destinataire + "')";
 		try {

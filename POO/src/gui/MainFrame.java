@@ -144,8 +144,13 @@ public class MainFrame {
 			            	try {
 			            		if(result.next()) {
 			            			System.out.println("conv page open");
+			            			User destinataire;
 			            			//System.out.println(result.getString(1) + "   "+ result.getString(2) + "  " +result.getString(3));
-			            			User destinataire = new User(sTab[5],Integer.parseInt(result.getString(1)) ,InetAddress.getLocalHost(),Integer.parseInt(result.getString(3)) );
+			            			if(user.getLogin().equals(sTab[5])){
+			            				destinataire = new User(sTab[3],Integer.parseInt(result.getString(1)) ,InetAddress.getLocalHost(),Integer.parseInt(result.getString(3)) );
+				   					}else {
+				   						destinataire = new User(sTab[5],Integer.parseInt(result.getString(1)) ,InetAddress.getLocalHost(),Integer.parseInt(result.getString(3)) );
+				   					}
 					            	Conversation conv = new Conversation(user, destinataire, Integer.parseInt(sTab[1]));
 					            	new ConversationPage(conv, user);
 					            	DB.deconnect();

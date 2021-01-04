@@ -32,6 +32,20 @@ public class ConversationPage extends JFrame implements ActionListener{
 	    Container contentPane = frame.getContentPane();
 	    
 	    
+	    User destinataire;
+	    if(user.getLogin().equals(conv.getUser2().getLogin())) {
+	    	destinataire = conv.getUser1();
+	    	System.out.println(conv.getUser1().getLogin() + conv.getUser2().getLogin());
+	    	System.out.println(user.getLogin() + "1 dest : " + destinataire.getLogin());
+	    }else {
+	    	destinataire = conv.getUser2();
+	    	System.out.println(conv.getUser1().getLogin() + conv.getUser2().getLogin());
+	    	System.out.println(user.getLogin() + "2 dest : " + destinataire.getLogin());
+	    }
+	    
+	    
+	    
+	    
 	    
 	    JPanel panelBas = new JPanel(new GridLayout(3,1));
 	    JPanel panelHaut = new JPanel(new GridLayout(1,1));
@@ -81,6 +95,16 @@ public class ConversationPage extends JFrame implements ActionListener{
 	    		Thread tcpsendmessage = new Thread(new TCPconvInit.TCPstartconv(conv.getUser2(), newMess));
 	    		tcpsendmessage.start();
 				
+	    		//trouve l'envoyeur du message
+            	// faire une recherche dans BDD conv si conv existe ajout msg sinon ajout conv puis ajout msg
+            	DatabaseConv_mess DB = new DatabaseConv_mess(user.getLogin(), user.getNumPort(), conv.getUser2().getLogin(), conv.getUser2().getNumPort());
+            	DB.selectConv(user, conv.getUser2());
+            	ResultSet result = DB.getResult();            	
+            	System.out.println(result);
+            	DB.deconnect();
+            
+	    		
+	    		
 			}
 		});
 	    
@@ -89,7 +113,7 @@ public class ConversationPage extends JFrame implements ActionListener{
 	    
 	    frame.pack();
 		frame.setSize(1200, 600);
-		frame.setTitle("Conversation of " + conv.getUser1().getLogin() + " to " + conv.getUser2().getLogin() + " ID = "  + conv.getId());
+		frame.setTitle("Conversation of " + user.getLogin() + " to " + destinataire.getLogin() + " ID = "  + conv.getId());
 	    frame.setVisible(true);
 		
 	}
