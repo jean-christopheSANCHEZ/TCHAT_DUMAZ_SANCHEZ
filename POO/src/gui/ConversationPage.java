@@ -88,21 +88,12 @@ public class ConversationPage extends JFrame implements ActionListener{
 	    
 	    send.addActionListener(new ActionListener() {
 	    	public void actionPerformed(ActionEvent ae) {
-	    		Message newMess = new Message(newMessage.getText(), user);
+	    		Message newMess = new Message(newMessage.getText(), user, conv.getUser2());
 				/*DatabaseConv_mess DB = new DatabaseConv_mess(user.getLogin(), user.getNumPort(), conv.getUser2().getLogin(), conv.getUser2().getNumPort());
 				DB.insertMessage(newMess, conv.getId(), conv.getUser1());
 				DB.deconnect();*/
 	    		Thread tcpsendmessage = new Thread(new TCPconvInit.TCPstartconv(conv.getUser2(), newMess));
-	    		tcpsendmessage.start();
-				
-	    		//trouve l'envoyeur du message
-            	// faire une recherche dans BDD conv si conv existe ajout msg sinon ajout conv puis ajout msg
-            	DatabaseConv_mess DB = new DatabaseConv_mess(user.getLogin(), user.getNumPort(), conv.getUser2().getLogin(), conv.getUser2().getNumPort());
-            	DB.selectConv(user, conv.getUser2());
-            	ResultSet result = DB.getResult();            	
-            	System.out.println(result);
-            	DB.deconnect();
-            
+	    		tcpsendmessage.start();           
 	    		
 	    		
 			}

@@ -6,6 +6,8 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 import clientLogin.User;
 
@@ -43,8 +45,10 @@ public class TCPconvInit {
 		
 		final Socket link;
 		
+		
 		public TCPmessage(Socket link) {
 			this.link=link;
+			
 		}
 		
 		public void run() {
@@ -56,8 +60,30 @@ public class TCPconvInit {
 	            
 	            	ObjectInputStream ois = new ObjectInputStream(is);
 	            	m=(Message) ois.readObject();
-	                System.out.println("Message from " + m.getUser().getLogin() +" : "+m.getData());
+	                System.out.println("Message from " + m.getUser().getLogin() + " to : "+ m.getDestinataire().getLogin() +" : "+m.getData());
 	                
+	                //trouve l'envoyeur du message
+	            	// faire une recherche dans BDD conv si conv existe ajout msg sinon ajout conv puis ajout msg
+	            	DatabaseConv_mess DB = new DatabaseConv_mess(m.getUser().getLogin(), m.getUser().getNumPort(), m.getDestinataire().getLogin(), m.getDestinataire().getNumPort());
+	            	DB.selectConv(m.getUser(), m.getDestinataire());
+	            	ResultSet result = DB.getResult();            	
+	            	
+	            	
+	            	try {
+	            		if(result.next()) {
+	            			System.out.println(result.getString(1));
+	            			//ajout du message dans la bdd avec l'id de la conv : getString1)
+	            			Message new_message = new Message(m.getData());
+	            			DB.insertMessage(new_message, Integer.parseInt(result.getString(1)), m.getUser());
+	            		}else {
+	            			System.out.println("pas de conv on en creer une");
+	            		}
+						
+					} catch (SQLException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+	            	DB.deconnect();
 	            	
 	            is.close();
 	            link.close();

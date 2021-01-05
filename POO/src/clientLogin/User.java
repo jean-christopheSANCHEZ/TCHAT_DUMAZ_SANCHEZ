@@ -1,9 +1,10 @@
 package clientLogin;
 
+import java.io.Serializable;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
-public class User {
+public class User implements Serializable{
 	
 	private String login;
 	private int uniqueId;

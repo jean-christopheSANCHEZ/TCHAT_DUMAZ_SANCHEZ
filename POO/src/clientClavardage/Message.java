@@ -11,6 +11,7 @@ public class Message implements Serializable{
 	 */
 	private static final long serialVersionUID = 1L;
 	private User user;
+	private User destinataire;
 	private String data;
 	private Timestamp dateEnvoie;
 	private int type;
@@ -21,10 +22,11 @@ public class Message implements Serializable{
 		this.dateEnvoie = new Timestamp(System.currentTimeMillis());
 	}
 	
-	public Message(String data, User envoyeur) {
+	public Message(String data, User envoyeur, User destinataire) {
 		super();
 		this.data = data;
 		this.user = envoyeur;
+		this.destinataire = destinataire;
 		this.dateEnvoie = new Timestamp(System.currentTimeMillis());
 	}
 	
@@ -67,6 +69,13 @@ public class Message implements Serializable{
 		this.user = user;
 	}
 	
+	public User getDestinataire() {
+		return this.destinataire;
+	}
+
+	public void setDestinataire(User user) {
+		this.destinataire = user;
+	}
 	
 	
 	
