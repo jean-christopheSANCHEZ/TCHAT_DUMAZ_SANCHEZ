@@ -31,23 +31,59 @@ public class UDPBroadcast {
 			DatagramSocket serveur = new DatagramSocket(this.user.getNumPort());
 			
 			//byte[] buffer = new byte[1024];
-			Message m=new Message("");
 			
 			//DatagramPacket inPacket = new DatagramPacket(buffer, buffer.length);
 			
 			while (true) {
 				byte[] buffer = new byte[1024];
 				DatagramPacket inPacket = new DatagramPacket(buffer, buffer.length);
-			serveur.receive(inPacket);
-         	   
-         	ByteArrayInputStream ArrayStream2 = new ByteArrayInputStream(inPacket.getData());
-            ObjectInputStream ObjectStream2 = new ObjectInputStream(ArrayStream2);
+				serveur.receive(inPacket);
+         	   	Thread response=new Thread(new UDPserverResponse(inPacket,this.user,serveur));
+         	   	response.start();
+			
+			}
+			
+				}catch (SocketException e) {
+		               e.printStackTrace();
+		        } catch (UnknownHostException e) {
+		               e.printStackTrace();
+		        } catch (IOException e) {
+		               e.printStackTrace();
+		        }
+			
+		}
+	}
+	
+	public static class UDPserverResponse implements Runnable {
+		DatagramPacket inPacket;
+		User user;
+		DatagramSocket serveur;
+		
+		public UDPserverResponse(DatagramPacket packet,User utilisateur,DatagramSocket s) {
+			this.inPacket=packet;
+			this.user=utilisateur;
+			this.serveur=s;
+		}
+		
+		public void run() {
+			Message m=new Message("");
+			ByteArrayInputStream ArrayStream2 = new ByteArrayInputStream(inPacket.getData());
+            ObjectInputStream ObjectStream2 = null;
+			try {
+				ObjectStream2 = new ObjectInputStream(ArrayStream2);
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
             try {
             	m = (Message) ObjectStream2.readObject();
             } catch (ClassNotFoundException e) {
 					System.exit(-1);
 					e.printStackTrace();
-            }
+            } catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			
 			InetAddress clientAddress = inPacket.getAddress();
 			int clientPort = inPacket.getPort();
@@ -97,7 +133,12 @@ public class UDPBroadcast {
 	              
 	            byte[] buffer2 = ArrayStream.toByteArray();
 	            DatagramPacket outPacket = new DatagramPacket(buffer2, buffer2.length, clientAddress, clientPort);
-	   			serveur.send(outPacket);
+	   			try {
+					serveur.send(outPacket);
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 	   			
 			}
 	   		else if(m.getType()==2) {
@@ -106,17 +147,7 @@ public class UDPBroadcast {
 	   			DB.deleteByLogin(m.getData());
 	   			
 			}
-			 DB.deconnect();
-			
-			}
-			
-				}catch (SocketException e) {
-		               e.printStackTrace();
-		        } catch (UnknownHostException e) {
-		               e.printStackTrace();
-		        } catch (IOException e) {
-		               e.printStackTrace();
-		        }
+			DB.deconnect();
 			
 		}
 	}
