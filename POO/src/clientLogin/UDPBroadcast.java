@@ -285,6 +285,7 @@ public class UDPBroadcast {
 	               InetAddress adresse = InetAddress.getLocalHost();
 	               DatagramPacket outpacket = new DatagramPacket(buffer, buffer.length, adresse, 2000);
 	               DatagramPacket outpacket2 = new DatagramPacket(buffer, buffer.length, adresse, 3000);
+	               DatagramPacket outpacket3 = new DatagramPacket(buffer, buffer.length, adresse, 4000);
 	               //On lui affecte les donn�es � envoyer
 	               outpacket.setData(buffer);
 	               
@@ -292,6 +293,7 @@ public class UDPBroadcast {
 	               //On envoie au serveur
 	               client.send(outpacket);
 	               client.send(outpacket2);
+	               client.send(outpacket3);
 	               //Et on r�cup�re la r�ponse du serveur
 	               //byte[] buffer2 = new byte[1024];
 	               //DatagramPacket inpacket = new DatagramPacket(buffer2, buffer2.length);

@@ -7,16 +7,20 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.SpringLayout;
 
 import clientClavardage.Conversation;
 import clientClavardage.DatabaseConv_mess;
+import clientLogin.DatabaseLogin;
 import clientLogin.User;
 
 public class NewConversationForm extends JFrame implements ActionListener{
@@ -35,7 +39,7 @@ public class NewConversationForm extends JFrame implements ActionListener{
 	       
 	     //Set up the content pane.
 	       Container contentPane = frame.getContentPane();
-	       contentPane.setLayout(new SpringLayout());
+	       contentPane.setLayout(new GridLayout(1,2));
 
 	       //Add the buttons.
 	       JButton newConvButton = new JButton("Create new conversation");
@@ -58,6 +62,24 @@ public class NewConversationForm extends JFrame implements ActionListener{
 	       portDest_text = new JTextField();
 
 	       panel = new JPanel(new GridLayout(5, 1));
+	       JPanel panelUsers = new JPanel(new GridLayout(10,2));
+	       JLabel info= new JLabel("Utilisateurs connectés :");
+	       panelUsers.add(info);
+	       
+	       DatabaseLogin DB = new DatabaseLogin(user.getLogin(), user.getNumPort());
+		   DB.selectUsers();
+		   ResultSet result = DB.getResult();
+		    
+		    try {
+				while(result.next()) {
+					JLabel userCo = new JLabel( result.getString(2) + " connecté sur le port " + result.getString(3));
+					panelUsers.add(userCo);
+				}
+		    }catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+	       
 	       
 	       panel.add(userDest_label);
 	       panel.add(userDest_text);
@@ -69,6 +91,7 @@ public class NewConversationForm extends JFrame implements ActionListener{
 	       
 	       
 	       contentPane.add(panel);
+	       contentPane.add(panelUsers);
 	       
 	       
 	       newConvButton.addActionListener(new ActionListener() {
@@ -92,7 +115,7 @@ public class NewConversationForm extends JFrame implements ActionListener{
 			});
 	       
 		   frame.pack();
-		   frame.setSize(300, 600);
+		   frame.setSize(900, 600);
 		   frame.setTitle("Create new converstion");
 	       frame.setVisible(true);
 	}

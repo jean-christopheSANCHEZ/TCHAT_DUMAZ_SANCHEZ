@@ -79,6 +79,19 @@ public class DatabaseLogin {
 	}
 	
 	
+	public void selectUsers() {
+		String requete = "SELECT * FROM user";
+		try {
+			stmt = con.createStatement();
+			this.result = stmt.executeQuery(requete);
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	
 	public void deleteByLogin(String login) {
 		requete = "DELETE FROM user WHERE login='"+login +"'";
 		try {
