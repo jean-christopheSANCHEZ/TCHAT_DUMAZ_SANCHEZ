@@ -39,8 +39,8 @@ public class MainFrame {
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setSize(1800,1000);
 		frame.setTitle(user.getLogin()+" connected on port : " +user.getNumPort());
-		Thread tcpServer = new Thread(new TCPconvInit.TCPserverconv(user));
-		tcpServer.start();
+		/*Thread tcpServer = new Thread(new TCPconvInit.TCPserverconv(user));
+		tcpServer.start();*/
 		
 		
 		Container contentPane = frame.getContentPane();

@@ -52,7 +52,7 @@ public class TCPconvInit {
 		}
 		
 		public void run() {
-			
+			// à la fin du doit retourber m
 	        try {
 	        	Message m= new Message("");
 	            InputStream is = link.getInputStream();
@@ -91,6 +91,7 @@ public class TCPconvInit {
 	            e.printStackTrace();
 	        }
 		}
+		
 	}
 	
 	public static class TCPstartconv implements Runnable{

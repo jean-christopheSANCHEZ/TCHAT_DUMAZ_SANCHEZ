@@ -69,12 +69,16 @@ public class NewConversationForm extends JFrame implements ActionListener{
 	       DatabaseLogin DB = new DatabaseLogin(user.getLogin(), user.getNumPort());
 		   DB.selectUsers();
 		   ResultSet result = DB.getResult();
-		    
+		   String tmp = new String();
+		   JTextArea userCo = new JTextArea();
 		    try {
 				while(result.next()) {
-					JLabel userCo = new JLabel( result.getString(2) + " connecté sur le port " + result.getString(3));
-					panelUsers.add(userCo);
+					tmp = tmp + result.getString(2) + " connecté sur le port " + result.getString(3) +"\n";
+					
+					
 				}
+				userCo.setText(tmp);
+				panelUsers.add(userCo);
 		    }catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

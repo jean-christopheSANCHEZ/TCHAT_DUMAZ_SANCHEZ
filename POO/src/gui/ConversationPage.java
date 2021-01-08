@@ -9,11 +9,7 @@ import java.awt.event.ActionListener;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
 import javax.swing.*;
-import javax.swing.SpringLayout;
 
 import clientClavardage.Conversation;
 import clientClavardage.DatabaseConv_mess;
@@ -31,7 +27,8 @@ public class ConversationPage extends JFrame implements ActionListener{
 		
 	    Container contentPane = frame.getContentPane();
 	    
-	    
+	    Thread tcpServer = new Thread(new TCPconvInit.TCPserverconv(user));
+		tcpServer.start();
 	    User destinataire;
 	    if(user.getLogin().equals(conv.getUser2().getLogin())) {
 	    	destinataire = conv.getUser1();
@@ -48,37 +45,51 @@ public class ConversationPage extends JFrame implements ActionListener{
 	    
 	    
 	    JPanel panelBas = new JPanel(new GridLayout(3,1));
-	    JPanel panelHaut = new JPanel(new GridLayout(1,2));
-	    JPanel panelHautReception = new JPanel(new GridLayout(10,1));
-	    JPanel panelHautEnvoie = new JPanel(new GridLayout(10,1));
+	    JPanel panelHaut = new JPanel(new GridLayout(1,1));
+	    //JPanel panelHautReception = new JPanel(new GridLayout(1,1));
+	    //JPanel panelHautEnvoie = new JPanel(new GridLayout(1,1));
 	    
 	    
 	    DatabaseConv_mess DB = new DatabaseConv_mess(user.getLogin(), user.getNumPort(), conv.getUser2().getLogin(), conv.getUser2().getNumPort());
 	    DB.selectListMessageById(conv.getId());
 	    ResultSet result = DB.getResult();
-	    
+	    JTextArea mess =new JTextArea();
+	    String tmp  = new String();
 	    try {
 			while(result.next()) {
-				JLabel mess = new JLabel(result.getString(2) +" : " + result.getString(3));
+				
+				/*JLabel mess = new JLabel( tmp + "<html> test<br></html>");*/
+				//String labelText ="<html>"+tmp+"</html>";
+				
+				
 				
 				if(result.getString(4).equals(user.getLogin())) {
-					mess.setForeground(Color.blue);
+					
+					tmp = result.getString(2) +" : " + result.getString(3) +"\n";
+					mess.append(tmp);
+					//mess.setForeground(Color.blue);
 					//mess.setLocation(200,300);
-					panelHautEnvoie.add(mess);
+					//panelHautEnvoie.add(mess);
+					
 					/*panelHautEnvoie.revalidate();
 					panelHautEnvoie.repaint();
 					frame.repaint();*/
 				}else {
-					mess.setForeground(Color.green);
+					
+					tmp = "                                                                                                                                                " +result.getString(2) +" : " + result.getString(3) +"\n";
+					mess.append(tmp);
+					//mess.setForeground(Color.green);
 					//mess.setLocation(50,300);
-					panelHautReception.add(mess);
+					//panelHautReception.add(mess);
 					/*panelHautReception.revalidate();
 					panelHautReception.repaint();
 					frame.repaint();*/
 				
 				}
-				panelHaut.add(panelHautEnvoie);
-				panelHaut.add(panelHautReception);
+				//panelHaut.add(panelHautEnvoie);
+				//panelHaut.add(panelHautReception);
+				
+				panelHaut.add(mess);
 			    System.out.println(mess.getText());
 			}
 		} catch (SQLException e) {
@@ -111,7 +122,9 @@ public class ConversationPage extends JFrame implements ActionListener{
 				DB.deconnect();*/
 	    		Thread tcpsendmessage = new Thread(new TCPconvInit.TCPstartconv(conv.getUser2(), newMess));
 	    		tcpsendmessage.start();           
-	    		
+	    		String tmp2 = new String();
+	    		tmp2 = newMess.getDateEnvoie() +" : " + newMess.getData()+"\n";
+				mess.append(tmp2);
 	    		
 			}
 		});
