@@ -128,7 +128,7 @@ public class Login extends JFrame implements ActionListener {
 						if(state ==0) {
 							DatabaseLogin DB = new DatabaseLogin(userName,portNumber);
 							DB.insertLoginPort();
-							//DB.deconnect();
+							DB.deconnect();
 
 							frame.dispose();
 							new MainFrame(newUtilisateur);

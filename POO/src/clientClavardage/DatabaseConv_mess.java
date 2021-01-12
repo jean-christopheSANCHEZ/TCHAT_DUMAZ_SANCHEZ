@@ -65,7 +65,7 @@ public class DatabaseConv_mess {
 	
 	
 	public void selectConv(User user1, User user2) {
-		String requete = "SELECT id FROM conversation WHERE User1 = '" + user1.getLogin() +"' AND User2 = '" + user2.getLogin() +"' OR User1 = '" + user2.getLogin() +"' AND User2 = '" + user1.getLogin() +"'";
+		String requete = "SELECT idConv FROM conversation WHERE User1 = '" + user1.getLogin() +"' AND User2 = '" + user2.getLogin() +"' OR User1 = '" + user2.getLogin() +"' AND User2 = '" + user1.getLogin() +"'";
 		try {
 			stmt = con.createStatement();
 			this.result = stmt.executeQuery(requete);

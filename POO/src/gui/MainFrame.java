@@ -143,7 +143,7 @@ public class MainFrame {
 			            	DB.selectUserByLogin(sTab[5]);
 			            	ResultSet result = DB.getResult();
 			            	try {
-			            		
+			            		if(result.next()) {
 			            			System.out.println("conv page open");
 			            			User destinataire;
 			            			//System.out.println(result.getString(1) + "   "+ result.getString(2) + "  " +result.getString(3));
@@ -157,7 +157,10 @@ public class MainFrame {
 					            	/*new ConversationPage(conv, user);*/
 					            	Thread startConv = new Thread(new TCPconvInit.TCPstartconv(user, destinataire, conv));
 					            	startConv.start();
-
+			            		}else {
+			            			System.out.println("utilisateur non connecté !");
+			            		}
+			            		
 			            				/*DB.selectUserByLogin(sTab[3]);
 						            	ResultSet result1 = DB.getResult();
 			            				if(result1.next()) {
