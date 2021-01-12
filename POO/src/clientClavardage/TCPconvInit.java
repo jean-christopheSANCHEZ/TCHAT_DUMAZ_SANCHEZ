@@ -9,6 +9,9 @@ import java.net.Socket;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import javax.swing.JPanel;
+import javax.swing.JTextArea;
+
 import clientLogin.User;
 
 public class TCPconvInit {
@@ -17,9 +20,11 @@ public class TCPconvInit {
 	public static class TCPserverconv implements Runnable{
 		
 		User user;
+		JTextArea area;
 		
-		public TCPserverconv(User utilisateur) {
+		public TCPserverconv(User utilisateur,JTextArea area) {
 			this.user=utilisateur;
+			this.area=area;
 		}
 
 		
@@ -30,7 +35,7 @@ public class TCPconvInit {
 	            while(true) {
 	                System.out.println("Awaiting connection");
 	                Socket link = server.accept();
-	                new Thread(new TCPmessage(link)).start();
+	                new Thread(new TCPmessage(link,area)).start();
 	            }
 
 	        } catch (Exception e) {
@@ -44,15 +49,16 @@ public class TCPconvInit {
 	public static class TCPmessage implements Runnable{
 		
 		final Socket link;
+		JTextArea area;
 		
-		
-		public TCPmessage(Socket link) {
+		public TCPmessage(Socket link,JTextArea area) {
 			this.link=link;
+			this.area=area;
 			
 		}
 		
 		public void run() {
-			// à la fin du doit retourber m
+			// à la fin du doit retourner m
 	        try {
 	        	Message m= new Message("");
 	            InputStream is = link.getInputStream();
@@ -84,7 +90,7 @@ public class TCPconvInit {
 						e.printStackTrace();
 					}
 	            	DB.deconnect();
-	            	
+	            this.area.append(m.getData());
 	            is.close();
 	            link.close();
 	        } catch (Exception e) {

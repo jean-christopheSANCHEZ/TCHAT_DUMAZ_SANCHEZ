@@ -27,8 +27,7 @@ public class ConversationPage extends JFrame implements ActionListener{
 		
 	    Container contentPane = frame.getContentPane();
 	    
-	    Thread tcpServer = new Thread(new TCPconvInit.TCPserverconv(user));
-		tcpServer.start();
+	    
 	    User destinataire;
 	    if(user.getLogin().equals(conv.getUser2().getLogin())) {
 	    	destinataire = conv.getUser1();
@@ -50,11 +49,13 @@ public class ConversationPage extends JFrame implements ActionListener{
 	    //JPanel panelHautEnvoie = new JPanel(new GridLayout(1,1));
 	    
 	    
+	    
 	    DatabaseConv_mess DB = new DatabaseConv_mess(user.getLogin(), user.getNumPort(), conv.getUser2().getLogin(), conv.getUser2().getNumPort());
 	    DB.selectListMessageById(conv.getId());
 	    ResultSet result = DB.getResult();
 	    JTextArea mess =new JTextArea();
 	    String tmp  = new String();
+	    
 	    try {
 			while(result.next()) {
 				
@@ -99,6 +100,8 @@ public class ConversationPage extends JFrame implements ActionListener{
 	    
 	    DB.deconnect();
 	    
+	    Thread tcpServer = new Thread(new TCPconvInit.TCPserverconv(user,mess));
+		tcpServer.start();
 	    
 	    JTextField newMessage = new JTextField("Enter new message");
 	    panelBas.add(newMessage);
