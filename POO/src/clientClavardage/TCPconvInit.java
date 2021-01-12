@@ -114,6 +114,7 @@ public class TCPconvInit {
 		
 		public void run() {
 			try {
+				System.out.println("envoie sur le port : "+this.destination.getNumPort());
 				Socket link = new Socket(this.destination.getIp(),this.destination.getNumPort()+1);
 				ObjectOutputStream oos=new ObjectOutputStream(link.getOutputStream());
 				oos.writeObject(this.message);
