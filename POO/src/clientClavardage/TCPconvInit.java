@@ -89,8 +89,10 @@ public class TCPconvInit {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
+	            	String tmp = "                                                                                                                                                " +m.getDateEnvoie() +" : " + m.getData() +"\n";
+		            this.area.append(tmp);
 	            	DB.deconnect();
-	            this.area.append(m.getData());
+	            	
 	            is.close();
 	            link.close();
 	        } catch (Exception e) {

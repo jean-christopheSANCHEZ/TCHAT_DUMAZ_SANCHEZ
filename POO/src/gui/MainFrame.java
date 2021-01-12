@@ -114,8 +114,6 @@ public class MainFrame {
 				   tabConv = strings.toArray(tabConv);
 				   
 				   listConv.setModel(new AbstractListModel() {
-
-					    
 			            @Override
 			            public int getSize() {
 			                return strings.size();

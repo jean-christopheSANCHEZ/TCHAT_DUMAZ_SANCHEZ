@@ -55,7 +55,7 @@ public class ConversationPage extends JFrame implements ActionListener{
 	    ResultSet result = DB.getResult();
 	    JTextArea mess =new JTextArea();
 	    String tmp  = new String();
-	    
+	   
 	    try {
 			while(result.next()) {
 				
@@ -90,9 +90,10 @@ public class ConversationPage extends JFrame implements ActionListener{
 				//panelHaut.add(panelHautEnvoie);
 				//panelHaut.add(panelHautReception);
 				
-				panelHaut.add(mess);
+				
 			    System.out.println(mess.getText());
 			}
+			panelHaut.add(mess);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -128,7 +129,7 @@ public class ConversationPage extends JFrame implements ActionListener{
 	    		String tmp2 = new String();
 	    		tmp2 = newMess.getDateEnvoie() +" : " + newMess.getData()+"\n";
 				mess.append(tmp2);
-	    		
+				//panelHaut.add(mess);
 			}
 		});
 	    
