@@ -58,7 +58,7 @@ public class TCPconvInit {
 		}
 		
 		public void run() {
-			// à la fin du doit retourner m
+			// ï¿½ la fin du doit retourner m
 	        try {
 	        	Message m= new Message("");
 	            InputStream is = link.getInputStream();
@@ -67,7 +67,7 @@ public class TCPconvInit {
 	            	ObjectInputStream ois = new ObjectInputStream(is);
 	            	m=(Message) ois.readObject();
 	                System.out.println("Message from " + m.getUser().getLogin() + " to : "+ m.getDestinataire().getLogin() +" : "+m.getData());
-	                
+	                this.area.append(m.getData());
 	                //trouve l'envoyeur du message
 	            	// faire une recherche dans BDD conv si conv existe ajout msg sinon ajout conv puis ajout msg
 	            	DatabaseConv_mess DB = new DatabaseConv_mess(m.getUser().getLogin(), m.getUser().getNumPort(), m.getDestinataire().getLogin(), m.getDestinataire().getNumPort());
