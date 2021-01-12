@@ -128,7 +128,7 @@ public class ConversationPage extends JFrame implements ActionListener{
 				/*DatabaseConv_mess DB = new DatabaseConv_mess(user.getLogin(), user.getNumPort(), conv.getUser2().getLogin(), conv.getUser2().getNumPort());
 				DB.insertMessage(newMess, conv.getId(), conv.getUser1());
 				DB.deconnect();*/
-<<<<<<< HEAD
+
 	    		
 	    		try {
 					ObjectOutputStream oos=new ObjectOutputStream(link.getOutputStream());
@@ -142,10 +142,10 @@ public class ConversationPage extends JFrame implements ActionListener{
 	    		
 	    		/*Thread tcpsendmessage = new Thread(new TCPconvInit.TCPstartconv(conv.getUser2(), newMess));*/
 	    		/*tcpsendmessage.start();   */        
-=======
-	    		Thread tcpsendmessage = new Thread(new TCPconvInit.TCPstartconv(destinataire, newMess));
+
+	    		Thread tcpsendmessage = new Thread(new TCPconvInit.TCPstartconv(user, destinataire, conv));
 	    		tcpsendmessage.start();           
->>>>>>> master
+
 	    		String tmp2 = new String();
 	    		tmp2 = newMess.getDateEnvoie() +" : " + newMess.getData()+"\n";
 				mess.append(tmp2);
