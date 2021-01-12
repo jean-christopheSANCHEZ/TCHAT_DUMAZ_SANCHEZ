@@ -38,7 +38,13 @@ public class Message implements Serializable{
 		this.type = type;
 		
 		
-		
+	}
+	
+	public Message(User envoyeur, User destinataire, int t) {
+		super();
+		this.user=envoyeur;
+		this.destinataire=destinataire;
+		this.type=t;
 	}
 	
 	public String getData() {

@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.OutputStream;
+import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.sql.ResultSet;
@@ -12,7 +14,11 @@ import java.sql.SQLException;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 
+import com.mysql.cj.protocol.Resultset;
+
+import clientLogin.DatabaseLogin;
 import clientLogin.User;
+import gui.ConversationPage;
 
 public class TCPconvInit {
 	
@@ -20,11 +26,10 @@ public class TCPconvInit {
 	public static class TCPserverconv implements Runnable{
 		
 		User user;
-		JTextArea area;
-		
-		public TCPserverconv(User utilisateur,JTextArea area) {
+				
+		public TCPserverconv(User utilisateur) {
 			this.user=utilisateur;
-			this.area=area;
+
 		}
 
 		
@@ -35,7 +40,10 @@ public class TCPconvInit {
 	            while(true) {
 	                System.out.println("Awaiting connection");
 	                Socket link = server.accept();
-	                new Thread(new TCPmessage(link,area)).start();
+	                
+	                /*Conversation conv =new Conversation()
+	                ConversationPage fenetre = new ConversationPage(conv,user,link);*/
+	                new Thread(new TCPmessage(link,this.user)).start();
 	            }
 
 	        } catch (Exception e) {
@@ -49,38 +57,96 @@ public class TCPconvInit {
 	public static class TCPmessage implements Runnable{
 		
 		final Socket link;
-		JTextArea area;
+		public ConversationPage fenetre;
+		public boolean running = true;
+		final User user;
 		
-		public TCPmessage(Socket link,JTextArea area) {
+		public TCPmessage(Socket link,User u) {
 			this.link=link;
-			this.area=area;
+			this.user=u;
 			
 		}
 		
+		public boolean sendMessage(Message m) {
+			
+			try {
+				ObjectOutputStream oos=new ObjectOutputStream(link.getOutputStream());
+				oos.writeObject(m);
+				oos.flush();
+				return true;
+				
+			} catch (IOException e) {
+				e.printStackTrace();
+				return false;
+			}
+		}
+		
+		
 		public void run() {
+			this.running=true;
+			Message m= new Message("");
+			
+			InputStream is;
+			try {
+				is = link.getInputStream();
+				ObjectInputStream ois = new ObjectInputStream(is);
+	        	m=(Message) ois.readObject();
+			} catch (IOException | ClassNotFoundException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}     
+        	
+        	
+        	DatabaseConv_mess DB = new DatabaseConv_mess(user.getLogin(),user.getNumPort(),m.getDestinataire().getLogin(),m.getDestinataire().getNumPort());
+        	DB.selectConv(user, m.getDestinataire());
+        	ResultSet result=DB.getResult();
+        	int id;
+        	try {
+				if(result.next()) {
+					 id=Integer.parseInt(result.getString(1));
+					 Conversation conv=new Conversation(this.user,m.getUser(),id);
+					 this.fenetre=new ConversationPage(conv,user,link);
+				}
+				else {
+					System.out.println("pas de conv correspondante");
+				}
+			} catch (NumberFormatException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			} catch (SQLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			
+			
+			
+			
 			// � la fin du doit retourner m
+			DB.deconnect();
+			
 	        try {
-	        	Message m= new Message("");
-	            InputStream is = link.getInputStream();
-	            int rcv = 0;
+	        	
+	        	while(this.running) { 
+	        		is = link.getInputStream();
+	            
 	            
 	            	ObjectInputStream ois = new ObjectInputStream(is);
 	            	m=(Message) ois.readObject();
 	                System.out.println("Message from " + m.getUser().getLogin() + " to : "+ m.getDestinataire().getLogin() +" : "+m.getData());
-	                this.area.append(m.getData());
+	                this.fenetre.mess.append(m.getData());
 	                //trouve l'envoyeur du message
 	            	// faire une recherche dans BDD conv si conv existe ajout msg sinon ajout conv puis ajout msg
-	            	DatabaseConv_mess DB = new DatabaseConv_mess(m.getUser().getLogin(), m.getUser().getNumPort(), m.getDestinataire().getLogin(), m.getDestinataire().getNumPort());
-	            	DB.selectConv(m.getUser(), m.getDestinataire());
-	            	ResultSet result = DB.getResult();            	
+	            	DatabaseConv_mess DB2 = new DatabaseConv_mess(m.getUser().getLogin(), m.getUser().getNumPort(), m.getDestinataire().getLogin(), m.getDestinataire().getNumPort());
+	            	DB2.selectConv(m.getUser(), m.getDestinataire());
+	            	ResultSet result2 = DB2.getResult();            	
 	            	
 	            	
 	            	try {
-	            		if(result.next()) {
-	            			System.out.println(result.getString(1));
+	            		if(result2.next()) {
+	            			System.out.println(result2.getString(1));
 	            			//ajout du message dans la bdd avec l'id de la conv : getString1)
 	            			Message new_message = new Message(m.getData());
-	            			DB.insertMessage(new_message, Integer.parseInt(result.getString(1)), m.getUser());
+	            			DB2.insertMessage(new_message, Integer.parseInt(result2.getString(1)), m.getUser());
 	            		}else {
 	            			System.out.println("pas de conv on en creer une");
 	            		}
@@ -90,35 +156,47 @@ public class TCPconvInit {
 						e.printStackTrace();
 					}
 	            	String tmp = "                                                                                                                                                " +m.getDateEnvoie() +" : " + m.getData() +"\n";
-		            this.area.append(tmp);
-	            	DB.deconnect();
-	            	
+		            this.fenetre.mess.append(tmp);
+	            	DB2.deconnect();
+	        	
 	            is.close();
+	        	}
 	            link.close();
+	        	
 	        } catch (Exception e) {
 	            e.printStackTrace();
 	        }
 		}
 		
+		
 	}
 	
 	public static class TCPstartconv implements Runnable{
 		
+		final User user;
 		final User destination;
-		final Message message;
+		public Conversation conv;
+		public Message m;
 		
-		public TCPstartconv(User dest,Message m) {
+		
+		public TCPstartconv(User e,User dest, Conversation c) {
+			this.user=e;
 			this.destination=dest;
-			this.message=m;
+			this.conv=c;
+			this.m=new Message(this.user,this.destination,0);
+			
 		}
 		
 		public void run() {
 			try {
-				System.out.println("envoie sur le port : "+this.destination.getNumPort());
+				System.out.println("connexion avec le port : "+this.destination.getNumPort());
 				Socket link = new Socket(this.destination.getIp(),this.destination.getNumPort()+1);
+				ConversationPage fenetre = new ConversationPage(conv,user,link);
 				ObjectOutputStream oos=new ObjectOutputStream(link.getOutputStream());
-				oos.writeObject(this.message);
-				link.close();
+				oos.writeObject(m);
+				
+						
+				
 			} catch (IOException e) {
 				e.printStackTrace();
 			}

@@ -36,6 +36,9 @@ public class MainFrame {
 		Thread udpserver = new Thread(new UDPBroadcast.UDPserver(user.getLogin(), user));
 		udpserver.start();
 		
+		Thread tcpserver = new Thread(new TCPconvInit.TCPserverconv(user));
+		tcpserver.start();
+		
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setSize(1800,1000);
 		frame.setTitle(user.getLogin()+" connected on port : " +user.getNumPort());
@@ -150,7 +153,10 @@ public class MainFrame {
 				   						destinataire = new User(sTab[5],Integer.parseInt(result.getString(1)) ,InetAddress.getLocalHost(),Integer.parseInt(result.getString(3)) );
 				   					}
 					            	Conversation conv = new Conversation(user, destinataire, Integer.parseInt(sTab[1]));
-					            	new ConversationPage(conv, user);
+					            	/*new ConversationPage(conv, user);*/
+					            	Thread startConv = new Thread(new TCPconvInit.TCPstartconv(user, destinataire, conv));
+					            	startConv.start();
+					            	
 					            	DB.deconnect();
 			            		}
 								
