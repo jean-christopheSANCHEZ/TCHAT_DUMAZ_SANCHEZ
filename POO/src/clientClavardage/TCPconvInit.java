@@ -188,6 +188,7 @@ public class TCPconvInit {
 		}
 		
 		public void run() {
+			System.out.println("envoie sur le port : "+this.destination.getNumPort());
 			try {
 				System.out.println("connexion avec le port : "+this.destination.getNumPort());
 				Socket link = new Socket(this.destination.getIp(),this.destination.getNumPort()+1);
