@@ -98,9 +98,10 @@ public class TCPconvInit {
         	
         	
         	DatabaseConv_mess DB = new DatabaseConv_mess(user.getLogin(),user.getNumPort(),m.getDestinataire().getLogin(),m.getDestinataire().getNumPort());
-        	DB.selectConv(user, m.getDestinataire());
+        	DB.selectConv(user, m.getUser());
         	ResultSet result=DB.getResult();
         	int id;
+        	
         	try {
 				if(result.next()) {
 					 id=Integer.parseInt(result.getString(1));

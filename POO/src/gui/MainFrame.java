@@ -139,53 +139,46 @@ public class MainFrame {
 			            	//System.out.println(s);
 			            	String sTab [] = s.split(":");
 			            	//System.out.println(sTab[1] + "   "+ sTab[3] + "  " +sTab[5]);
+			            	User destinataire;
+			            	
 			            	DatabaseLogin DB = new DatabaseLogin(user.getLogin(), user.getNumPort());
-			            	DB.selectUserByLogin(sTab[5]);
-			            	ResultSet result = DB.getResult();
-			            	try {
-			            		if(result.next()) {
-			            			System.out.println("conv page open");
-			            			User destinataire;
-			            			//System.out.println(result.getString(1) + "   "+ result.getString(2) + "  " +result.getString(3));
-			            			if(user.getLogin().equals(sTab[5])){
-
-			            				destinataire = new User(sTab[3],Integer.parseInt(result.getString(1)) ,InetAddress.getLocalHost(),Integer.parseInt(result.getString(3)) );
-				   					}else {
-				   						destinataire = new User(sTab[5],Integer.parseInt(result.getString(1)) ,InetAddress.getLocalHost(),Integer.parseInt(result.getString(3)) );
-				   					}
-					            	Conversation conv = new Conversation(user, destinataire, Integer.parseInt(sTab[1]));
-					            	/*new ConversationPage(conv, user);*/
-					            	Thread startConv = new Thread(new TCPconvInit.TCPstartconv(user, destinataire, conv));
-					            	startConv.start();
-			            		}else {
-			            			System.out.println("utilisateur non connecté !");
-			            		}
-			            		
-			            				/*DB.selectUserByLogin(sTab[3]);
-						            	ResultSet result1 = DB.getResult();
-			            				if(result1.next()) {
-			            					destinataire = new User(sTab[3],Integer.parseInt(result1.getString(1)) ,InetAddress.getLocalHost(),Integer.parseInt(result1.getString(3)) );
-			            					Conversation conv = new Conversation(user, destinataire, Integer.parseInt(sTab[1]));
-							            	new ConversationPage(conv, user);
-			            				}
-			            			else {
-			            				DB.selectUserByLogin(sTab[5]);
-						            	ResultSet result2 = DB.getResult();
-			            				if(result2.next()) {
-			            					destinataire = new User(sTab[5],Integer.parseInt(result2.getString(1)) ,InetAddress.getLocalHost(),Integer.parseInt(result2.getString(3)) );
-			            					Conversation conv = new Conversation(user, destinataire, Integer.parseInt(sTab[1]));
-							            	new ConversationPage(conv, user);
-			            				}
-			            			}	
-			            				 */
-					            	
-					            	DB.deconnect();
-			            		
-								
-							} catch (SQLException | NumberFormatException | UnknownHostException e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
-							}
+			            	
+			            	if(sTab[3].equals(user.getLogin())) {
+			            		DB.selectUserByLogin(sTab[5]);
+								ResultSet result2 = DB.getResult();
+								try {
+									if(result2.next()) {
+										destinataire = new User(sTab[5],Integer.parseInt(result2.getString(1)) ,InetAddress.getLocalHost(),Integer.parseInt(result2.getString(3)) );
+										Conversation conv = new Conversation(user, destinataire, Integer.parseInt(sTab[1]));
+										Thread startConv = new Thread(new TCPconvInit.TCPstartconv(user, destinataire, conv));
+										startConv.start();
+									}else {
+										System.out.println("utilisateur pas connecté");
+									}
+								} catch (NumberFormatException | UnknownHostException | SQLException e) {
+									// TODO Auto-generated catch block
+									e.printStackTrace();
+								}
+			            	}
+			            	else{
+			            		DB.selectUserByLogin(sTab[3]);
+								ResultSet result2 = DB.getResult();
+								try {
+									if(result2.next()) {
+										destinataire = new User(sTab[3],Integer.parseInt(result2.getString(1)) ,InetAddress.getLocalHost(),Integer.parseInt(result2.getString(3)) );
+										Conversation conv = new Conversation(user, destinataire, Integer.parseInt(sTab[1]));
+										Thread startConv = new Thread(new TCPconvInit.TCPstartconv(user, destinataire, conv));
+										startConv.start();
+									}else {
+										System.out.println("utilisateur pas connecté");
+									}
+								} catch (NumberFormatException | UnknownHostException | SQLException e) {
+									// TODO Auto-generated catch block
+									e.printStackTrace();
+								}
+			            	}
+            				
+					       DB.deconnect();
 			            	
 			            }
 			        });
