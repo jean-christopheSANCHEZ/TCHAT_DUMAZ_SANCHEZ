@@ -196,7 +196,7 @@ public class TCPconvInit {
 				ConversationPage fenetre = new ConversationPage(conv,user,link);
 				ObjectOutputStream oos=new ObjectOutputStream(link.getOutputStream());
 				oos.writeObject(m);
-				
+				System.out.println("Message envoyé depuis startconv!");
 						
 				
 			} catch (IOException e) {

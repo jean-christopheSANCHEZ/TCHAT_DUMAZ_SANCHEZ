@@ -18,6 +18,7 @@ import clientClavardage.Conversation;
 import clientClavardage.DatabaseConv_mess;
 import clientClavardage.Message;
 import clientClavardage.TCPconvInit;
+import clientClavardage.TCPconvInit.TCPmessage;
 import clientLogin.User;
 
 public class ConversationPage extends JFrame implements ActionListener{
@@ -30,6 +31,10 @@ public class ConversationPage extends JFrame implements ActionListener{
 	    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 	    Container contentPane = frame.getContentPane();
+	    
+	    TCPmessage tcp_message= new TCPmessage(link,user);
+	    Thread thread_message = new Thread(tcp_message);
+		thread_message.start();
 	    
 	    
 	    User destinataire;
@@ -128,23 +133,16 @@ public class ConversationPage extends JFrame implements ActionListener{
 				/*DatabaseConv_mess DB = new DatabaseConv_mess(user.getLogin(), user.getNumPort(), conv.getUser2().getLogin(), conv.getUser2().getNumPort());
 				DB.insertMessage(newMess, conv.getId(), conv.getUser1());
 				DB.deconnect();*/
-
-	    		
-	    		try {
-					ObjectOutputStream oos=new ObjectOutputStream(link.getOutputStream());
-					oos.writeObject(newMess);
-					oos.flush();	
-					
-				} catch (IOException e) {
-					e.printStackTrace();
-				
-				}
 	    		
 	    		/*Thread tcpsendmessage = new Thread(new TCPconvInit.TCPstartconv(conv.getUser2(), newMess));*/
 	    		/*tcpsendmessage.start();   */        
-
-	    		Thread tcpsendmessage = new Thread(new TCPconvInit.TCPstartconv(user, destinataire, conv));
-	    		tcpsendmessage.start();           
+	    		
+	    		
+	    		if(tcp_message.sendMessage(newMess)) {
+	    			System.out.println("message envoyé depuis sendmessage");
+	    		}else {
+	    			System.out.println("erreur envoie avec sendmessage");
+	    		}
 
 	    		String tmp2 = new String();
 	    		tmp2 = newMess.getDateEnvoie() +" : " + newMess.getData()+"\n";

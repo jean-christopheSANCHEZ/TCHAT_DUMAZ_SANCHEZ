@@ -152,6 +152,7 @@ public class MainFrame {
 										Conversation conv = new Conversation(user, destinataire, Integer.parseInt(sTab[1]));
 										Thread startConv = new Thread(new TCPconvInit.TCPstartconv(user, destinataire, conv));
 										startConv.start();
+										listConv.clearSelection();
 									}else {
 										System.out.println("utilisateur pas connecté");
 									}
@@ -169,6 +170,7 @@ public class MainFrame {
 										Conversation conv = new Conversation(user, destinataire, Integer.parseInt(sTab[1]));
 										Thread startConv = new Thread(new TCPconvInit.TCPstartconv(user, destinataire, conv));
 										startConv.start();
+										listConv.clearSelection();
 									}else {
 										System.out.println("utilisateur pas connecté");
 									}
