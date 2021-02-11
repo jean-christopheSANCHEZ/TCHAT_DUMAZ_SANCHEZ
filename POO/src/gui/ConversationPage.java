@@ -32,9 +32,9 @@ public class ConversationPage extends JFrame implements ActionListener{
 		
 	    Container contentPane = frame.getContentPane();
 	    
-	    TCPmessage tcp_message= new TCPmessage(link,user);
+	   /* TCPmessage tcp_message= new TCPmessage(link,user);
 	    Thread thread_message = new Thread(tcp_message);
-		thread_message.start();
+		thread_message.start();*/
 	    
 	    
 	    User destinataire;
@@ -128,7 +128,8 @@ public class ConversationPage extends JFrame implements ActionListener{
 		});
 	    
 	    send.addActionListener(new ActionListener() {
-	    	public void actionPerformed(ActionEvent ae) {
+	    	
+			public void actionPerformed(ActionEvent ae) {
 	    		Message newMess = new Message(newMessage.getText(), user, conv.getUser2());
 				/*DatabaseConv_mess DB = new DatabaseConv_mess(user.getLogin(), user.getNumPort(), conv.getUser2().getLogin(), conv.getUser2().getNumPort());
 				DB.insertMessage(newMess, conv.getId(), conv.getUser1());
@@ -138,11 +139,22 @@ public class ConversationPage extends JFrame implements ActionListener{
 	    		/*tcpsendmessage.start();   */        
 	    		
 	    		
-	    		if(tcp_message.sendMessage(newMess)) {
+	    		/*if(tcp_message.sendMessage(newMess)) {
 	    			System.out.println("message envoyé depuis sendmessage");
 	    		}else {
 	    			System.out.println("erreur envoie avec sendmessage");
-	    		}
+	    		}*/
+	    		
+	    		try {
+				ObjectOutputStream oos=new ObjectOutputStream(link.getOutputStream());
+				oos.writeObject(newMess);
+				oos.flush();
+				
+				
+			} catch (IOException e) {
+				e.printStackTrace();
+				
+			}
 
 	    		String tmp2 = new String();
 	    		tmp2 = newMess.getDateEnvoie() +" : " + newMess.getData()+"\n";

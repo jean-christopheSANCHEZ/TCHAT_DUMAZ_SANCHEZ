@@ -16,6 +16,7 @@ import javax.swing.JTextArea;
 
 import com.mysql.cj.protocol.Resultset;
 
+import clientClavardage.TCPconvInit.TCPmessage;
 import clientLogin.DatabaseLogin;
 import clientLogin.User;
 import gui.ConversationPage;
@@ -40,10 +41,45 @@ public class TCPconvInit {
 	            while(true) {
 	                System.out.println("Awaiting connection");
 	                Socket link = server.accept();
+	                System.out.println("Message recu sur server général");
+	                Message m= new Message("");
+	                InputStream is;
+	    			
+	    			try {
+	    				is = link.getInputStream();
+	    				ObjectInputStream ois = new ObjectInputStream(is);
+	    	        	m=(Message) ois.readObject();
+	    			} catch (IOException | ClassNotFoundException e1) {
+	    				
+	    				e1.printStackTrace();
+	    			}     
+	            	
+	            	
+	            	DatabaseConv_mess DB = new DatabaseConv_mess(user.getLogin(),user.getNumPort(),m.getDestinataire().getLogin(),m.getDestinataire().getNumPort());
+	            	DB.selectConv(user, m.getUser());
+	            	ResultSet result=DB.getResult();
+	            	int id;
+	            	
+	            	try {
+	    				if(result.next()) {
+	    					 id=Integer.parseInt(result.getString(1));
+	    					 Conversation conv=new Conversation(this.user,m.getUser(),id);
+	    					 ConversationPage fenetre = new ConversationPage(conv,user,link);
+	    					 new Thread(new TCPmessage(link,this.user,fenetre)).start();
+	    				}
+	    				else {
+	    					System.out.println("pas de conv correspondante");
+	    				}
+	    			} catch (NumberFormatException e1) {
+	    				
+	    				e1.printStackTrace();
+	    			} catch (SQLException e1) {
+	    				
+	    				e1.printStackTrace();
+	    			}
+	    			
+	    			DB.deconnect();                
 	                
-	                /*Conversation conv =new Conversation()
-	                ConversationPage fenetre = new ConversationPage(conv,user,link);*/
-	                new Thread(new TCPmessage(link,this.user)).start();
 	            }
 
 	        } catch (Exception e) {
@@ -61,16 +97,17 @@ public class TCPconvInit {
 		public boolean running = true;
 		final User user;
 		
-		public TCPmessage(Socket link,User u) {
+		public TCPmessage(Socket link,User u,ConversationPage f) {
 			this.link=link;
 			this.user=u;
+			this.fenetre=f;
 			
 		}
 		
 		public boolean sendMessage(Message m) {
 			
 			try {
-				ObjectOutputStream oos=new ObjectOutputStream(link.getOutputStream());
+				ObjectOutputStream oos=new ObjectOutputStream(this.link.getOutputStream());
 				oos.writeObject(m);
 				oos.flush();
 				return true;
@@ -87,12 +124,13 @@ public class TCPconvInit {
 			Message m= new Message("");
 			
 			InputStream is;
+			/*
 			try {
 				is = link.getInputStream();
 				ObjectInputStream ois = new ObjectInputStream(is);
 	        	m=(Message) ois.readObject();
 			} catch (IOException | ClassNotFoundException e1) {
-				// TODO Auto-generated catch block
+				
 				e1.printStackTrace();
 			}     
         	
@@ -112,19 +150,15 @@ public class TCPconvInit {
 					System.out.println("pas de conv correspondante");
 				}
 			} catch (NumberFormatException e1) {
-				// TODO Auto-generated catch block
+				
 				e1.printStackTrace();
 			} catch (SQLException e1) {
-				// TODO Auto-generated catch block
+				
 				e1.printStackTrace();
 			}
 			
-			
-			
-			
-			// ï¿½ la fin du doit retourner m
 			DB.deconnect();
-			
+			*/
 	        try {
 	        	
 	        	while(this.running) { 
@@ -133,6 +167,7 @@ public class TCPconvInit {
 	            
 	            	ObjectInputStream ois = new ObjectInputStream(is);
 	            	m=(Message) ois.readObject();
+	            	
 	                System.out.println("Message from " + m.getUser().getLogin() + " to : "+ m.getDestinataire().getLogin() +" : "+m.getData());
 	                this.fenetre.mess.append(m.getData());
 	                //trouve l'envoyeur du message
@@ -194,6 +229,9 @@ public class TCPconvInit {
 				System.out.println("connexion avec le port : "+this.destination.getNumPort());
 				Socket link = new Socket(this.destination.getIp(),this.destination.getNumPort()+1);
 				ConversationPage fenetre = new ConversationPage(conv,user,link);
+				TCPmessage tcp_message= new TCPmessage(link,user,fenetre);
+			    Thread thread_message = new Thread(tcp_message);
+				thread_message.start();
 				ObjectOutputStream oos=new ObjectOutputStream(link.getOutputStream());
 				oos.writeObject(m);
 				System.out.println("Message envoyé depuis startconv!");
