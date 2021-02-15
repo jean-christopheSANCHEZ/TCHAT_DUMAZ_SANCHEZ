@@ -3,11 +3,11 @@
 Lors du lancement de l’application une fenêtre de login apparaît, une base de donnée en local est créée. L’utilisateur doit entrer un nom d’utilisateur ainsi qu’un numéro de port.
 __Pour effectuer des tests en local (sur la même machine) : vous pouvez lancer jusqu'à 3 clients mais il faut utiliser les ports 2000,3000 et 4000 respectivement !__
 
-Si le login n’est pas utilisé on est dirigé vers la page principale sinon un nouveau login est demandé à l’utilisateur. Sur la page principale, l’utilisateur peut se déconnecter, afficher la liste des conversations auxquelles l’utilisateur connecté a participé, ou bien créer une nouvelle conversation. Lorsque l’utilisateur arrive sur la page de création d’une nouvelle conversation, on lui propose la liste des utilisateurs connectés (ceux qui ont répondu au broadcast UDP) ensuite nous avons encore une fois besoin du numéro de port du destinataire.
+Si le login n’est pas utilisé on est dirigé vers la page principale sinon un nouveau login est demandé à l’utilisateur. Sur la page principale, l’utilisateur peut se déconnecter, afficher la liste des conversations auxquelles l’utilisateur connecté a participé, ou bien créer une nouvelle conversation. Lorsque l’utilisateur arrive sur la page de création d’une nouvelle conversation, on lui propose la liste des utilisateurs connectés (ceux qui ont répondu au broadcast UDP) ensuite nous avons encore une fois besoin du numéro de port du destinataire. On rentre les informations grâce à la liste puis on appuie sur "Back to Main frame".
 
 Pour commencer à dialoguer, l’utilisateur doit afficher les conversations auxquelles il prend part, pour cela il suffit de cliquer sur le bouton “refresh conversation list”: les conversations précendentes apparaissent ainsi que celles créées dans la fenêtre "NewConversation". Il lui suffit ensuite de cliquer sur la conversation qu’il souhaite ouvrir. La page de conversation s’ouvre aussi sur le client du destinataire. Vous pouvez maintenant dialoguer au sein de cette conversation en tapant du texte dans la section “enter new message” et cliquer sur envoyer. Pour quitter la conversation, l'utilisateur doit cliquer sur le bouton “back to main frame”.
 
-Si on a lancé plusieurs clients en local alors lorsqu'un d'eux demande une conversation, 2 fenêtres de dialogue vont s'ouvrir : 1 côté du demandeur (ex: user1 vers user2), 1 autre côté reception (ex: user2 vers user1) afin de notifier l'user ciblé (à la manière d'une infobulle).
+Si l’utilisateur d’une conversation précédente n’est pas disponible alors la cliquer sur la conversation n’ouvrira aucune fenêtre chat, indiquant que l’utilisateur est hors-ligne.
 
 **Installation**
 
