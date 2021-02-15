@@ -21,9 +21,12 @@ import clientLogin.DatabaseLogin;
 import clientLogin.User;
 import gui.ConversationPage;
 
+//NB Important : puisque le serveur UDP tourne déjà sur le port de l'utilisateur, on utilise le port+1 comme référence pour le serveur TCP
+
+//ensemble des fonctions liées à la connexion TCP pour établir des conversations, envoyer/recevoir des messages
 public class TCPconvInit {
 	
-	
+	//classe lancant le serveur TCP principal chargé de recevoir les demandes de conversations
 	public static class TCPserverconv implements Runnable{
 		
 		User user;
@@ -33,13 +36,14 @@ public class TCPconvInit {
 
 		}
 
-		
 		public void run() {
 			try {
+				
 	            ServerSocket server = new ServerSocket(user.getNumPort()+1);
 
 	            while(true) {
 	                System.out.println("Awaiting connection");
+	                //une fois la demande de connexion recue, création d'un nouveau socket pour traiter la demande
 	                Socket link = server.accept();
 	                System.out.println("Message recu sur server général");
 	                Message m= new Message("");
@@ -54,7 +58,7 @@ public class TCPconvInit {
 	    				e1.printStackTrace();
 	    			}     
 	            	
-	            	
+	            	//le premier message étant une demande depuis StartConv on analyse d'où provient le message pour créer une nouvelle conversation et une ConversationPage
 	            	DatabaseConv_mess DB = new DatabaseConv_mess(user.getLogin(),user.getNumPort(),m.getDestinataire().getLogin(),m.getDestinataire().getNumPort());
 	            	DB.selectConv(user, m.getUser());
 	            	ResultSet result=DB.getResult();
@@ -62,9 +66,11 @@ public class TCPconvInit {
 	            	
 	            	try {
 	    				if(result.next()) {
+	    					//création de la conversationPage recevant le nouveau socket créé
 	    					 id=Integer.parseInt(result.getString(1));
 	    					 Conversation conv=new Conversation(this.user,m.getUser(),id);
 	    					 ConversationPage fenetre = new ConversationPage(conv,user,link);
+	    					//lancement du thread chargé de recevoir les prochains messages
 	    					 new Thread(new TCPmessage(link,this.user,fenetre)).start();
 	    				}
 	    				else {
@@ -90,6 +96,8 @@ public class TCPconvInit {
 		
 	}
 	
+	
+	//classe lancant le thread chargé de recevoir les messages une fois la demande de conversation acceptée
 	public static class TCPmessage implements Runnable{
 		
 		final Socket link;
@@ -129,12 +137,9 @@ public class TCPconvInit {
 	        try {
 	        	is = link.getInputStream();
 	        	while(this.running) { 
-	        		
-	            
 	            
 	            	ObjectInputStream ois = new ObjectInputStream(is);
 	            	m=(Message) ois.readObject();
-	            	
 	                System.out.println("Message from " + m.getUser().getLogin() + " to : "+ m.getDestinataire().getLogin() +" : "+m.getData());
 	                
 	                //trouve l'envoyeur du message
@@ -142,7 +147,6 @@ public class TCPconvInit {
 	            	DatabaseConv_mess DB2 = new DatabaseConv_mess(m.getUser().getLogin(), m.getUser().getNumPort(), m.getDestinataire().getLogin(), m.getDestinataire().getNumPort());
 	            	DB2.selectConv(m.getUser(), m.getDestinataire());
 	            	ResultSet result2 = DB2.getResult();            	
-	            	
 	            	
 	            	try {
 	            		if(result2.next()) {
@@ -160,23 +164,20 @@ public class TCPconvInit {
 					}
 	            	String tmp = "                                                                                                                                                " +m.getDateEnvoie() +" : " + m.getData() +"\n";
 		            this.fenetre.mess.append(tmp);
-	            	DB2.deconnect();
-	        	
-	            
+	            	DB2.deconnect();     
 	        	}
+	        	
 	        	is.close();
 	            link.close();
-	        	
+	            
 	        } catch (Exception e) {
 	            e.printStackTrace();
 	        }
-		}
-		
-		
+		}	
 	}
 	
 	
-	
+	//classe chargée d'envoyer les demandes de conversations à un utilisateur
 	public static class TCPstartconv{
 		
 		final User user;
@@ -197,7 +198,11 @@ public class TCPconvInit {
 			System.out.println("envoie sur le port : "+this.destination.getNumPort());
 			try {
 				System.out.println("connexion avec le port : "+this.destination.getNumPort());
+				
+				//on envoie la demande sur le port+1 cad le serveur TCP du destinataire
 				Socket link = new Socket(this.destination.getIp(),this.destination.getNumPort()+1);
+				
+				//on crée immédiatement une nouvelle conversation, une conversationPage et on lance le thread de réception de message côté envoyeur
 				ConversationPage fenetre = new ConversationPage(conv,user,link);
 				TCPmessage tcp_message= new TCPmessage(link,user,fenetre);
 			    Thread thread_message = new Thread(tcp_message);

@@ -10,11 +10,19 @@ public class Message implements Serializable{
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private User user;
-	private User destinataire;
+	private User user;//utilisateur qui envoie le message
+	private User destinataire;//utilisateur destinataire
 	private String data;//text entré par l'utilisateur
 	private Timestamp dateEnvoie;//format de date pour la date d'envoie
-	private int type;//utile pour reconnaitre le type de message dans udp ou tcp 
+	private int type;//utile pour reconnaitre le type de message dans udp ou tcp
+	
+	//type = 0 : message de demande de connexion si via le broadcast UDP, ou demande de conversation si via TCP
+	//type = 1 : réponse d'un broadcast UDP positive
+	//type = -1 : réponse d'un broadcast UDP négative
+	//type = 2 : message de deconnexion via broadcast UDP
+	
+	
+	//plusieurs constructeurs selon les besoins des classes utilisant Message
 	
 	public Message(String data) {
 		super();

@@ -6,10 +6,10 @@ import java.net.UnknownHostException;
 
 public class User implements Serializable{
 	
-	private String login;
+	private String login; //login local de l'utilisateur
 	private int uniqueId;//pas utilisé dans notre implementation
 	private InetAddress ip;//pas utilise dans notre implementation car tous les test on du etre fait en local donc mm ip, on utilise les numero de port pour simuler differentes machines
-	private int numPort;
+	private int numPort; // numéro de port associé à l'utilisateur
 	private User [] infoUsers;
 	
 	
