@@ -5,5 +5,10 @@ Pour commencer à dialoguer, l’utilisateur doit afficher les conversations aux
 
 Installation
 
+Il vous faudra importer les deux bases de données nécessaires au fonctionnement de l'application pour effectuer des tests. Les deux fichiers correspondants sont : LAUNCH/BDD_SETUP/login.sql et LAUNCH/BDD_SETUP/conv_mess.sql.
+Il vous faudra donc un serveur local mySQL qui tourne sur votre machine (ex : WAMP). Les paramètres de connexions à mySQL sont par defaut (login : root, mdp :), si vous voulez les changer pour les adapter à vos paramètres de connexions , il faut les changer ligne 22 du fichier POO\src\clientLogin\DatabaseLogin.java et ligne 30 du fichier POO\src\clientClavardage\DatabaseConv_mess.java.
+Une fois connecté à phpMyAdmin il faut selectionner "nouvelle base de donnée" puis "importer" et séléctionner un fichier .sql précedemmet cité, faire la même chose pour l'autre fichier .sql.
+
 Afin de lancer le client, il suffit de double cliquer sur le fichier .jar : LAUNCH/DUMAZ_SANCHEZ_poo_project.jar
-Lors de l'execution du programme, il vous sera demander d'autoriser l'application à utiliser des fonctionnalités bloquées par le pare-feu. Ces fonctionnalités sont celles nécessaires à la mise en place de tcp (utilisation des ports) et la connexion à la base de donnée.
+Lors de l'execution du programme, il vous sera demander d'autoriser l'application à utiliser des fonctionnalités bloquées par le pare-feu. Ces fonctionnalités sont nécessaires à la mise en place de tcp (utilisation des ports) et à la connexion à la base de données.
+
