@@ -124,52 +124,19 @@ public class TCPconvInit {
 			Message m= new Message("");
 			
 			InputStream is;
-			/*
-			try {
-				is = link.getInputStream();
-				ObjectInputStream ois = new ObjectInputStream(is);
-	        	m=(Message) ois.readObject();
-			} catch (IOException | ClassNotFoundException e1) {
-				
-				e1.printStackTrace();
-			}     
-        	
-        	
-        	DatabaseConv_mess DB = new DatabaseConv_mess(user.getLogin(),user.getNumPort(),m.getDestinataire().getLogin(),m.getDestinataire().getNumPort());
-        	DB.selectConv(user, m.getUser());
-        	ResultSet result=DB.getResult();
-        	int id;
-        	
-        	try {
-				if(result.next()) {
-					 id=Integer.parseInt(result.getString(1));
-					 Conversation conv=new Conversation(this.user,m.getUser(),id);
-					 this.fenetre=new ConversationPage(conv,user,link);
-				}
-				else {
-					System.out.println("pas de conv correspondante");
-				}
-			} catch (NumberFormatException e1) {
-				
-				e1.printStackTrace();
-			} catch (SQLException e1) {
-				
-				e1.printStackTrace();
-			}
 			
-			DB.deconnect();
-			*/
+			
 	        try {
-	        	
+	        	is = link.getInputStream();
 	        	while(this.running) { 
-	        		is = link.getInputStream();
+	        		
 	            
 	            
 	            	ObjectInputStream ois = new ObjectInputStream(is);
 	            	m=(Message) ois.readObject();
 	            	
 	                System.out.println("Message from " + m.getUser().getLogin() + " to : "+ m.getDestinataire().getLogin() +" : "+m.getData());
-	                this.fenetre.mess.append(m.getData());
+	                
 	                //trouve l'envoyeur du message
 	            	// faire une recherche dans BDD conv si conv existe ajout msg sinon ajout conv puis ajout msg
 	            	DatabaseConv_mess DB2 = new DatabaseConv_mess(m.getUser().getLogin(), m.getUser().getNumPort(), m.getDestinataire().getLogin(), m.getDestinataire().getNumPort());
@@ -195,8 +162,9 @@ public class TCPconvInit {
 		            this.fenetre.mess.append(tmp);
 	            	DB2.deconnect();
 	        	
-	            is.close();
+	            
 	        	}
+	        	is.close();
 	            link.close();
 	        	
 	        } catch (Exception e) {
@@ -207,7 +175,9 @@ public class TCPconvInit {
 		
 	}
 	
-	public static class TCPstartconv implements Runnable{
+	
+	
+	public static class TCPstartconv{
 		
 		final User user;
 		final User destination;
@@ -223,7 +193,7 @@ public class TCPconvInit {
 			
 		}
 		
-		public void run() {
+		public void init() {
 			System.out.println("envoie sur le port : "+this.destination.getNumPort());
 			try {
 				System.out.println("connexion avec le port : "+this.destination.getNumPort());

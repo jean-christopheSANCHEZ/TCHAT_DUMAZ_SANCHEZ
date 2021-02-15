@@ -7,8 +7,8 @@ import java.net.UnknownHostException;
 public class User implements Serializable{
 	
 	private String login;
-	private int uniqueId;
-	private InetAddress ip;
+	private int uniqueId;//pas utilisé dans notre implementation
+	private InetAddress ip;//pas utilise dans notre implementation car tous les test on du etre fait en local donc mm ip, on utilise les numero de port pour simuler differentes machines
 	private int numPort;
 	private User [] infoUsers;
 	

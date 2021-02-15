@@ -102,6 +102,7 @@ public class NewConversationForm extends JFrame implements ActionListener{
 				public void actionPerformed(ActionEvent ae) {
 					// envoie dans la bdd la nouvelle conv evec les infos
 					try {
+						
 						User destinataire = new User(userDest_text.getText(), 1, InetAddress.getLocalHost(), Integer.parseInt(portDest_text.getText()));
 						DatabaseConv_mess DB = new DatabaseConv_mess(user.getLogin(), user.getNumPort(), destinataire.getLogin(), destinataire.getNumPort());
 						DB.addConversation();

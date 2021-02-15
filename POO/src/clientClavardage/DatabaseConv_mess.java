@@ -8,6 +8,9 @@ import java.sql.Statement;
 
 import clientLogin.User;
 
+
+
+//base de donnée centralisee
 public class DatabaseConv_mess {
 	private String DBurl;
 	private Connection con;
@@ -19,7 +22,7 @@ public class DatabaseConv_mess {
 	private int userPort, destinatairePort;
 	
 	
-	
+	//connection a la base de donnée
 	public DatabaseConv_mess(String login, int port, String destLogin, int destPort) {
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
@@ -40,7 +43,7 @@ public class DatabaseConv_mess {
 		
 	}
 
-
+	//deconnexion de la bdd
 	public void deconnect() {
 		try {
 			con.close();
@@ -50,7 +53,7 @@ public class DatabaseConv_mess {
 			e.printStackTrace();
 		}
 	}
-	
+	//selectionner les conv dans la quelle un user apparait
 	public void selectConvToMainUser() {
 		String requete = "SELECT * FROM conversation WHERE User1 = '" + user +"' or User2 = '" + user +"'";
 		try {
@@ -63,7 +66,7 @@ public class DatabaseConv_mess {
 		}
 	}
 	
-	
+	//selectionner une conv en particulier connaissant les 2 uers
 	public void selectConv(User user1, User user2) {
 		String requete = "SELECT idConv FROM conversation WHERE User1 = '" + user1.getLogin() +"' AND User2 = '" + user2.getLogin() +"' OR User1 = '" + user2.getLogin() +"' AND User2 = '" + user1.getLogin() +"'";
 		try {
@@ -76,7 +79,7 @@ public class DatabaseConv_mess {
 		}
 	}
 	
-	
+	//ajouter une nouvelle conversation
 	public void addConversation() {
 		String requete = "INSERT INTO conversation (user1,user2) values ('" + this.user + "','" + this.destinataire + "')";
 		try {
@@ -89,7 +92,7 @@ public class DatabaseConv_mess {
 		}
 	}
 	
-	
+	//selectionner la liste des messages suivant leurs id (cle etrangere en lien avec l id de la conv auquel ils sont attchés
 	public void selectListMessageById(int id) {
 		String requete = "SELECT * FROM message WHERE id = '" + id +"'";
 		try {
@@ -101,7 +104,7 @@ public class DatabaseConv_mess {
 			e.printStackTrace();
 		}
 	}
-	
+	//insérer un nouveau message
 	public void insertMessage(Message message, int idConvEnCours, User userEmetteur) {
 		String requete = "INSERT INTO message (id,timestamp,data,loginEmetteur) values ('" + idConvEnCours + "','" + message.getDateEnvoie() + "','" + message.getData() +"','" + userEmetteur.getLogin() +"')";
 		try {

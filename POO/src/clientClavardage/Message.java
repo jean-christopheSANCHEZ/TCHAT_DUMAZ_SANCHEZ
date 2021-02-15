@@ -12,9 +12,9 @@ public class Message implements Serializable{
 	private static final long serialVersionUID = 1L;
 	private User user;
 	private User destinataire;
-	private String data;
-	private Timestamp dateEnvoie;
-	private int type;
+	private String data;//text entré par l'utilisateur
+	private Timestamp dateEnvoie;//format de date pour la date d'envoie
+	private int type;//utile pour reconnaitre le type de message dans udp ou tcp 
 	
 	public Message(String data) {
 		super();

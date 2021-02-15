@@ -24,19 +24,16 @@ import clientLogin.User;
 public class ConversationPage extends JFrame implements ActionListener{
 	
 	public JTextArea mess;
+	private Socket link;
 	
-	public ConversationPage(Conversation conv, User user,Socket link) {
-		
+	public ConversationPage(Conversation conv, User user,Socket sock) {
+		this.link = sock; //socket utilise pour l'envoie des messages
 		JFrame frame = new JFrame("New conv");
 	    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 	    Container contentPane = frame.getContentPane();
 	    
-	   /* TCPmessage tcp_message= new TCPmessage(link,user);
-	    Thread thread_message = new Thread(tcp_message);
-		thread_message.start();*/
-	    
-	    
+	    //mise a jour du destinataire car on fonction des cas il peut y avoir des changements, dans ces test on uniformalise et on est sur de notre destinataire
 	    User destinataire;
 	    if(user.getLogin().equals(conv.getUser2().getLogin())) {
 	    	destinataire = conv.getUser1();
@@ -49,16 +46,11 @@ public class ConversationPage extends JFrame implements ActionListener{
 	    }
 	    System.out.println(conv.getUser1().getNumPort() + conv.getUser2().getNumPort());
 	    
-	    
-	    
-	    
+
 	    JPanel panelBas = new JPanel(new GridLayout(3,1));
 	    JPanel panelHaut = new JPanel(new GridLayout(1,1));
-	    //JPanel panelHautReception = new JPanel(new GridLayout(1,1));
-	    //JPanel panelHautEnvoie = new JPanel(new GridLayout(1,1));
-	    
-	    
-	    
+	  
+	    // on selectionne dans la bdd les message qui correspondent à l'id de la conv (cle etrangere)
 	    DatabaseConv_mess DB = new DatabaseConv_mess(user.getLogin(), user.getNumPort(), conv.getUser2().getLogin(), conv.getUser2().getNumPort());
 	    DB.selectListMessageById(conv.getId());
 	    ResultSet result = DB.getResult();
@@ -67,38 +59,19 @@ public class ConversationPage extends JFrame implements ActionListener{
 	   
 	    try {
 			while(result.next()) {
-				
-				/*JLabel mess = new JLabel( tmp + "<html> test<br></html>");*/
-				//String labelText ="<html>"+tmp+"</html>";
-				
-				
-				
-				if(result.getString(4).equals(user.getLogin())) {
+			
+				if(result.getString(4).equals(user.getLogin())) {//on test si c'est un msg recu ou envoye pour ne pas les afficher de la mm facon, pour que cela soit reconnaissable
 					
 					tmp = result.getString(2) +" : " + result.getString(3) +"\n";
 					this.mess.append(tmp);
-					//mess.setForeground(Color.blue);
-					//mess.setLocation(200,300);
-					//panelHautEnvoie.add(mess);
 					
-					/*panelHautEnvoie.revalidate();
-					panelHautEnvoie.repaint();
-					frame.repaint();*/
 				}else {
 					
 					tmp = "                                                                                                                                                " +result.getString(2) +" : " + result.getString(3) +"\n";
 					this.mess.append(tmp);
-					//mess.setForeground(Color.green);
-					//mess.setLocation(50,300);
-					//panelHautReception.add(mess);
-					/*panelHautReception.revalidate();
-					panelHautReception.repaint();
-					frame.repaint();*/
+					
 				
 				}
-				//panelHaut.add(panelHautEnvoie);
-				//panelHaut.add(panelHautReception);
-				
 				
 			    System.out.println(this.mess.getText());
 			}
@@ -109,10 +82,7 @@ public class ConversationPage extends JFrame implements ActionListener{
 		}
 	    
 	    DB.deconnect();
-	    
-	    /*Thread tcpServer = new Thread(new TCPconvInit.TCPserverconv(user,mess));
-		tcpServer.start();*/
-	    
+	    //partie basse ou on tape notre text et envoie le message
 	    JTextField newMessage = new JTextField("Enter new message");
 	    panelBas.add(newMessage);
 	    JButton send = new JButton("send message");
@@ -121,31 +91,19 @@ public class ConversationPage extends JFrame implements ActionListener{
 	    panelBas.add(back);
 	    back.addActionListener(new ActionListener() {
 	    	public void actionPerformed(ActionEvent ae) {
-				//save a conversation dans la bdd et ouvre la page de conversation
-	    		//new MainFrame(user);
+				//on ferme la page de conversation
 	    		frame.dispose();
 			}
 		});
 	    
 	    send.addActionListener(new ActionListener() {
-	    	
+
 			public void actionPerformed(ActionEvent ae) {
 	    		Message newMess = new Message(newMessage.getText(), user, conv.getUser2());
-				/*DatabaseConv_mess DB = new DatabaseConv_mess(user.getLogin(), user.getNumPort(), conv.getUser2().getLogin(), conv.getUser2().getNumPort());
-				DB.insertMessage(newMess, conv.getId(), conv.getUser1());
-				DB.deconnect();*/
-	    		
-	    		/*Thread tcpsendmessage = new Thread(new TCPconvInit.TCPstartconv(conv.getUser2(), newMess));*/
-	    		/*tcpsendmessage.start();   */        
-	    		
-	    		
-	    		/*if(tcp_message.sendMessage(newMess)) {
-	    			System.out.println("message envoyé depuis sendmessage");
-	    		}else {
-	    			System.out.println("erreur envoie avec sendmessage");
-	    		}*/
+				
 	    		
 	    		try {
+	    			//on envoie le message via tcp via le socket link
 				ObjectOutputStream oos=new ObjectOutputStream(link.getOutputStream());
 				oos.writeObject(newMess);
 				oos.flush();
@@ -155,7 +113,7 @@ public class ConversationPage extends JFrame implements ActionListener{
 				e.printStackTrace();
 				
 			}
-
+	    		//ecriture du msg envoye dans l'interface graphique de l'envoyeur
 	    		String tmp2 = new String();
 	    		tmp2 = newMess.getDateEnvoie() +" : " + newMess.getData()+"\n";
 				mess.append(tmp2);

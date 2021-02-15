@@ -11,15 +11,9 @@ public class Main{
 	public static void main(String[] args){
 		SwingUtilities.invokeLater(new Runnable(){
 			public void run() {
-				
-				
-				Login pageLogin = new Login();
-								
+				//on a juste à appeler notre page de login tout le reste de l'application se fera depuis la page précédente
+				Login pageLogin = new Login();				
 			}
 		});
 	}
-	
-	
-	
 }
-

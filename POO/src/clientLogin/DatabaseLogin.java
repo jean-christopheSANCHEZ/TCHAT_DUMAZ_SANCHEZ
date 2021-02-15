@@ -2,7 +2,7 @@ package clientLogin;
 
 import java.sql.*;
 
-
+//base de donnee locale
 
 public class DatabaseLogin {
 	
@@ -14,6 +14,7 @@ public class DatabaseLogin {
 	private Statement stmt;
 	private ResultSet result = null;
 	
+	//connection a la bdd
 	public DatabaseLogin(String login, int numPort) {
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
@@ -29,7 +30,7 @@ public class DatabaseLogin {
 		
 		
 	}
-
+	//deconnexion de la bdd
 	public void deconnect() {
 		try {
 			con.close();
@@ -40,7 +41,7 @@ public class DatabaseLogin {
 		}
 	}
 	
-	
+	//d'un utilisateur (couple login port)
 	public void insertLoginPort() {
 		requete = "INSERT INTO  user (identifiant, port) values ('" + this.login + "', '" + this.numPort+"')";
 		try {
@@ -54,7 +55,7 @@ public class DatabaseLogin {
 	}
 	
 	
-	
+	//vider la table
 	public void deleteAllField() {
 		requete = "TRUNCATE TABLE user";
 		try {
@@ -65,7 +66,7 @@ public class DatabaseLogin {
 			e.printStackTrace();
 		}
 	}
-	
+	//selectionne une ligne en fonction du login pour avoir le num de port par exemple
 	public void selectUserByLogin(String login) {
 		String requete = "SELECT * FROM user WHERE identifiant = '" + login +"'";
 		try {
@@ -78,7 +79,7 @@ public class DatabaseLogin {
 		}
 	}
 	
-	
+	//selectionne tous les utilisateurs presents dans la bdd
 	public void selectUsers() {
 		String requete = "SELECT * FROM user";
 		try {
@@ -91,7 +92,7 @@ public class DatabaseLogin {
 		}
 	}
 	
-	
+	//supprime un utilisateur en particulier
 	public void deleteByLogin(String login) {
 		requete = "DELETE FROM user WHERE login='"+login +"'";
 		try {

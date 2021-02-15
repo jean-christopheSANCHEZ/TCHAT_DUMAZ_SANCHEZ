@@ -59,73 +59,23 @@ public class Login extends JFrame implements ActionListener {
        
        
        
-       
+       //sur le clique du bouton
        logButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
 				
 				String userName = userName_text.getText();
 			    int portNumber= Integer.parseInt(userPort.getText()); 
 			    User newUtilisateur;
-				/*try {
-					
-					
-					Class.forName("com.mysql.cj.jdbc.Driver");
-					
-					String DBurl = "jdbc:mysql://localhost/login?zeroDateTimeBehavior=CONVERT_TO_NULL&serverTimezone=UTC";
-					Connection con = DriverManager.getConnection(DBurl, "root", "");
-					ResultSet result = null;
-					String requete = "SELECT identifiant,port FROM user WHERE identifiant='"+userName+"' AND port='"+portNumber+"'";
-					Statement stmt = con.createStatement();
-					result = stmt.executeQuery(requete);
-					
-					String bddResultLogin = null,bddResultPort = null;
-					
-					ResultSetMetaData rsmd = result.getMetaData();
-					int columnsNumber = rsmd.getColumnCount();
-					   while (result.next()) {
-					       for (int i = 1; i <= columnsNumber; i++) {
-					           if (i == 1) {
-					        	   bddResultLogin = result.getString(i);
-					        	   }
-					           if (i == 2) {
-					        	   bddResultPort = result.getString(i);
-					        	   }
-					       }
-					   }
-					   
-					   System.out.println(bddResultLogin + " port : "+bddResultPort);   
-					if(userName.equals(bddResultLogin) && portNumber == Integer.parseInt(bddResultPort)) {
-						
-						
-						newUtilisateur = new User(userName, 1, InetAddress.getLocalHost(), portNumber);
-						frame.dispose();
-						new MainFrame(newUtilisateur);
-					}else {
-						System.out.println("Login issue : login or port number invalid");
-						
-						errorConnectionMessage.setText("Login issue: "+userName+" and "+portNumber+ " are invalid");
-						errorConnectionMessage.setForeground(Color.RED);
-						frame.repaint();
-					}
-					con.close();
-					stmt.close();				
-					
-					
-					
-					
-				} catch (UnknownHostException | ClassNotFoundException | SQLException e) {
-					
-					e.printStackTrace();
-				}*/
-			    
-			    	
+		    	
 					try {
+						//broadcast udp
 						int state = 0;
 						newUtilisateur = new User(userName, 1, InetAddress.getLocalHost(), portNumber);
 						UDPclientBroadcast2 udpbroadcast = new UDPclientBroadcast2(newUtilisateur.getLogin(), newUtilisateur);
 						state = udpbroadcast.executeBroadcast();
 						
 						if(state ==0) {
+							//on ajoute notre login a la bdd locale
 							DatabaseLogin DB = new DatabaseLogin(userName,portNumber);
 							DB.insertLoginPort();
 							DB.deconnect();

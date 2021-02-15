@@ -7,9 +7,9 @@ import clientLogin.User;
 
 public class Conversation {
 	
-	private List<Message>  messages = new ArrayList<Message>();
-	private User user1, user2;
-	private int id;
+	private List<Message>  messages = new ArrayList<Message>();//pas utilise car bdd centralisée
+	private User user1, user2;//les 2 users prenant place à la conversation
+	private int id;//unique id pour bdd
 	
 	public Conversation( User user1, User user2, int id) {
 		super();

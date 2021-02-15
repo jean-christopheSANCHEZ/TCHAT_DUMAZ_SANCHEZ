@@ -25,25 +25,28 @@ import javax.swing.event.ListSelectionListener;
 import clientClavardage.Conversation;
 import clientClavardage.DatabaseConv_mess;
 import clientClavardage.TCPconvInit;
+import clientClavardage.TCPconvInit.TCPstartconv;
 import clientLogin.DatabaseLogin;
 import clientLogin.User;
 import clientLogin.UDPBroadcast;
 
+//c'est la page principale du client
 public class MainFrame {
 	private JFrame frame = new JFrame("Second");
 	
 	public MainFrame(User user) {
+		//init du server udp pour recevoir les broadcast
 		Thread udpserver = new Thread(new UDPBroadcast.UDPserver(user.getLogin(), user));
 		udpserver.start();
 		
+		//init du server tcp pour recevoir les messages
 		Thread tcpserver = new Thread(new TCPconvInit.TCPserverconv(user));
 		tcpserver.start();
 		
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setSize(1800,1000);
+		//on met le titre de la page avec le login du l utilisateur connecté
 		frame.setTitle(user.getLogin()+" connected on port : " +user.getNumPort());
-		/*Thread tcpServer = new Thread(new TCPconvInit.TCPserverconv(user));
-		tcpServer.start();*/
 		
 		
 		Container contentPane = frame.getContentPane();
@@ -54,44 +57,33 @@ public class MainFrame {
 
 	    //Add the buttons.
 	    JButton logOutButton = new JButton("Log Out");
-	    //JTextField rien = new JTextField(" ");
+	    
 	    
 	    JPanel panel = new JPanel(new GridLayout(1, 3));    
 	   
 	    
 	    panel.add(logOutButton);
 	    
-	    
+	    // déclare la list qui va contenir les conv
 	    JPanel panelList = new JPanel(new GridLayout(2, 1));
 	    
 	    
-	    
+	    //bouton d'actualisation
 	    JButton actualiseListConv = new JButton("Refresh conversation list");
 	    panel.add(actualiseListConv);
 	    
 	    JList listConv = new JList();
 	    actualiseListConv.addActionListener(new ActionListener() {
 	    	public void actionPerformed(ActionEvent ae) {
-				
-
-				/*DATABASE connection*/
-				//Class.forName("sun.jdbc.odbc.JdbcOdbcDriver");
-				try {/*
-				Class.forName("com.mysql.cj.jdbc.Driver");
-				String DBurl = "jdbc:mysql://localhost/conv_mess?zeroDateTimeBehavior=CONVERT_TO_NULL&serverTimezone=UTC";
-				Connection con = DriverManager.getConnection(DBurl, "root", "");
-				ResultSet result = null;
-				String requete = "SELECT * FROM conversation WHERE User1 = '" + user.getLogin() +"' or User2 = '" + user.getLogin() +"'";
-				Statement stmt = con.createStatement();
-				result = stmt.executeQuery(requete);*/
-				
-					
+							
+				try {
+				//mise en place de la bb pour rechercher toutes les conv qui contiennent notre login	
 				ResultSet result = null;
 				DatabaseConv_mess DB = new DatabaseConv_mess(user.getLogin(), user.getNumPort(), null, -1);
 				DB.selectConvToMainUser();
 				result = DB.getResult();
 				
-				
+				//récupération et utilisation du resultat retourné par la base de donnée
 				List<String> strings = new ArrayList<String>();
 				
 				String stringInfo = null;
@@ -100,7 +92,7 @@ public class MainFrame {
 				   while (result.next()) {
 					   stringInfo = "";
 					   for (int i = 1; i <= columnsNumber; i++) {
-				           //if (i > 1) System.out.print(",  "); 
+				           
 				           String columnValue = result.getString(i);
 				           //System.out.print(rsmd.getColumnName(i) + " : " + columnValue);
 				           stringInfo = stringInfo + rsmd.getColumnName(i) + ":" + columnValue + ":   ";
@@ -112,7 +104,7 @@ public class MainFrame {
 				   } 
 				   System.out.println(strings);
 				   
-				   //JList listConv = new JList();
+				   
 				   String[] tabConv = new String[strings.size()];
 				   tabConv = strings.toArray(tabConv);
 				   
@@ -128,17 +120,15 @@ public class MainFrame {
 			            }
 			        });
 				   
-				   
-				   
-				   
+				   //sur le clic de la conversation on fait tout ca
 				   listConv.addListSelectionListener(new ListSelectionListener() {
 
 			            @Override
 			            public void valueChanged(ListSelectionEvent evt) {
+			            	//on recupere le text de la conversation sur laquelle on liquer puis on parse pour recuperer ce qui nous interesse
 			            	String s = (String) listConv.getSelectedValue();
-			            	//System.out.println(s);
 			            	String sTab [] = s.split(":");
-			            	//System.out.println(sTab[1] + "   "+ sTab[3] + "  " +sTab[5]);
+			            	
 			            	User destinataire;
 			            	
 			            	DatabaseLogin DB = new DatabaseLogin(user.getLogin(), user.getNumPort());
@@ -148,10 +138,12 @@ public class MainFrame {
 								ResultSet result2 = DB.getResult();
 								try {
 									if(result2.next()) {
+										//on creer un user destinataire pour creer une variable conversatio car on en a besoin ensuite pour tcp
 										destinataire = new User(sTab[5],Integer.parseInt(result2.getString(1)) ,InetAddress.getLocalHost(),Integer.parseInt(result2.getString(3)) );
 										Conversation conv = new Conversation(user, destinataire, Integer.parseInt(sTab[1]));
-										Thread startConv = new Thread(new TCPconvInit.TCPstartconv(user, destinataire, conv));
-										startConv.start();
+										//on appelle statconv qui va initier la conversation tcp et ouvrir les fenetres de dialogue sur les deux clients (destinataire et le notre)
+										TCPstartconv startConv = new TCPstartconv(user, destinataire, conv);
+										startConv.init();
 										listConv.clearSelection();
 									}else {
 										System.out.println("utilisateur pas connecté");
@@ -168,8 +160,8 @@ public class MainFrame {
 									if(result2.next()) {
 										destinataire = new User(sTab[3],Integer.parseInt(result2.getString(1)) ,InetAddress.getLocalHost(),Integer.parseInt(result2.getString(3)) );
 										Conversation conv = new Conversation(user, destinataire, Integer.parseInt(sTab[1]));
-										Thread startConv = new Thread(new TCPconvInit.TCPstartconv(user, destinataire, conv));
-										startConv.start();
+										TCPstartconv startConv = new TCPstartconv(user, destinataire, conv);
+										startConv.init();
 										listConv.clearSelection();
 									}else {
 										System.out.println("utilisateur pas connecté");
@@ -186,7 +178,7 @@ public class MainFrame {
 			        });
 				   
 				   DB.deconnect();
-				   //panel.add(listConv);
+				   
 				   
 				   frame.repaint();
 				   frame.setVisible(true);
@@ -199,7 +191,7 @@ public class MainFrame {
 			}
 		});
 	    
-	    
+	    //on quit l application on aire la fenetre et on vide la base de donnée locale des login
 	    logOutButton.addActionListener(new ActionListener() {
 	    	public void actionPerformed(ActionEvent ae) {
 				Login newLogPage = new Login();
@@ -218,46 +210,13 @@ public class MainFrame {
 	    panel.add(newconv);
 	    newconv.addActionListener(new ActionListener() {
 	    	public void actionPerformed(ActionEvent ae) {
-				//save a conversation dans la bdd et ouvre la page de conversation
+				//on appelle la classe qui s'occupe de faire la nouvelle conv
 	    		new NewConversationForm(user);
-	    		//frame.dispose();
+	    		
 			}
 		});
 	    
-	    
-	    
-	   
-	    
-	    /*JList listConv = new JList();
-	    
-	    listConv.setModel(new AbstractListModel() {
-
-            String[] strings = { }
-            @Override
-            public int getSize() {
-                return strings.length;
-            }
-
-            @Override
-            public Object getElementAt(int i) {
-                return strings[i];
-            }
-        });
-	    
-	    
-	    listConv.addListSelectionListener(new ListSelectionListener() {
-
-            @Override
-            public void valueChanged(ListSelectionEvent evt) {
-                new ConversationPage(user);
-                //frame.dispose();
-            }
-        });
-	    */
-	    
-	    //panel.add(listConv);
 	    panelList.add(listConv);
-	    //panelList.add(rien);
 	    contentPane.add(panel, BorderLayout.NORTH);
 	    contentListConv.add(panelList, BorderLayout.CENTER);
 	    
